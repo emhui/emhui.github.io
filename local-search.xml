@@ -8,7 +8,7 @@
     <link href="/2021/01/03/hexo%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
     <url>/2021/01/03/hexo%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
     
-    <content type="html"><![CDATA[<p><code>hexo clean &amp;&amp; hexo d</code></p><p><del>如果使用这个命令，可能会清除<strong>CNAME</strong>文件</del></p><p>保持永久域名的方法</p><p>在<code>/source</code>目录下面建立一个文件<code>CNAME</code>,然后填入你的域名即可。</p>]]></content>
+    <content type="html"><![CDATA[<p><code>hexo clean &amp;&amp; hexo d</code></p><p><del>如果使用这个命令，可能会清除<strong>CNAME</strong>文件</del></p><p>保持永久域名的方法</p><p>在<code>/source</code>目录下面建立一个文件<code>CNAME</code>,然后填入你的域名即可。<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="脚注">[1]</span></a></sup></p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><h2>参考</h2><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="https://hexo.fluid-dev.com/docs/guide/#%E8%84%9A%E6%B3%A8">脚注</a><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
     
     
     
