@@ -4,6 +4,45 @@
   
   
   <entry>
+    <title>547. Number of Provinces</title>
+    <link href="/2021/01/07/547-Number-of-Provinces/"/>
+    <url>/2021/01/07/547-Number-of-Provinces/</url>
+    
+    <content type="html"><![CDATA[<h1 id="547-Number-of-Provinces"><a href="#547-Number-of-Provinces" class="headerlink" title="547. Number of Provinces"></a><a href="https://leetcode-cn.com/problems/number-of-provinces/">547. Number of Provinces</a></h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><div class="note note-warning">            <p>难度：中等</p>          </div><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/xmxR4o.png" alt="xmxR4o"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题转化为图，其大概意思就是是<strong>给出一个用邻接矩阵表示的无向图，找出连通分量的数量</strong>。</p><p>解决问题的方法主要有三种方法</p><ol><li>DFS</li><li>BFS</li><li>union-ﬁnd</li></ol><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="DFS"><a href="#DFS" class="headerlink" title="DFS"></a>DFS</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findCircleNum</span>(<span class="hljs-params">self, isConnected: List[List[<span class="hljs-built_in">int</span>]]</span>) -&gt; int:</span><br>        <span class="hljs-comment"># 求连通图的数量</span><br>        size = <span class="hljs-built_in">len</span>(isConnected)<br>        visited = [<span class="hljs-literal">False</span> <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(size)]<br>        count = <span class="hljs-number">0</span><br>        <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dfs</span>(<span class="hljs-params">isConnected, idx</span>):</span><br>            visited[idx] = <span class="hljs-literal">True</span><br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(size):<br>                <span class="hljs-keyword">if</span> isConnected[idx][i] == <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> visited[i]:<br>                    dfs(isConnected, i)<br><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(size):<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> visited[i]:<br>                dfs(isConnected, i)<br>                count += <span class="hljs-number">1</span><br>        <span class="hljs-keyword">return</span> count<br></code></pre></td></tr></table></figure><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findCircleNum</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&gt;&amp; isConnected)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> size = isConnected.size();<br>        <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;<br>        <span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">bool</span>&gt; <span class="hljs-title">visited</span><span class="hljs-params">(size, <span class="hljs-literal">false</span>)</span></span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; ++i) &#123;<br>            <span class="hljs-keyword">if</span> (!visited[i]) &#123;<br>                dfs(isConnected, i, visited, size);<br>                count++;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> count;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dfs</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&gt;&amp; isConnected, <span class="hljs-keyword">int</span> idx, <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">bool</span>&gt;&amp; visited, <span class="hljs-keyword">int</span> size)</span> </span>&#123;<br>        visited[idx] = <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>            <span class="hljs-keyword">if</span> (isConnected[idx][i] == <span class="hljs-number">1</span> &amp;&amp; !visited[i]) &#123;<br>                dfs(isConnected, i, visited, size);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure><h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul><li>时间复杂度: $O(n^2)$,这里需要对矩阵进行遍历。</li><li>空间复杂度: $O(n)$, 使用<code>visited</code>存储<code>n</code>个城市是否被访问。</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>LeetCode</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>bfs</tag>
+      
+      <tag>dfs</tag>
+      
+      <tag>leetcode</tag>
+      
+      <tag>union-find</tag>
+      
+      <tag>图</tag>
+      
+      <tag>无向图</tag>
+      
+      <tag>邻接矩阵</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1071 Speech Patterns</title>
     <link href="/2021/01/05/1071-Speech-Patterns/"/>
     <url>/2021/01/05/1071-Speech-Patterns/</url>
