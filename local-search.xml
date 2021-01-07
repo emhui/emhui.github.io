@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>1051 Pop Sequence</title>
+    <link href="/2021/01/07/1051-Pop-Sequence/"/>
+    <url>/2021/01/07/1051-Pop-Sequence/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1051-Pop-Sequence-25分"><a href="#1051-Pop-Sequence-25分" class="headerlink" title="1051 Pop Sequence (25分)"></a>1051 Pop Sequence (25分)</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/18Xskb.png" alt="18Xskb"></p><p>本题给定一个大小为$M$的栈，然后有一堆有序序列$1,2,3,4,5…N$依次入栈出栈。给定$K$个出栈序列，判断这几个出栈序列是否合法。</p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>建立一个栈，模拟$1 ~ N$进栈的过程，在这个过程中，将进栈的元素（<strong>栈顶元素</strong>）与当前<strong>出栈序列</strong>中的元素进行对比。若相等，则弹出栈顶，同时<strong>出栈序列</strong>往后移一位，继续此操作，直到有不相等的元素时，再让下一个元素进栈。</p><ol><li>建立一个初始的栈，该栈在每次输入前需要清空。</li><li>设置一个变量<code>flag</code>，若当前入栈后，栈的大小超过了<code>M</code>，则直接<code>flag = false;</code>然后跳出♻️。</li><li>接下然反复判断栈顶元素和当前第<code>idx</code>个<strong>出栈序列</strong>是否一样，若一样，执行弹出操作和<code>idx++</code></li><li>最后当栈为空且<code>flag=true</code>的时候输出<code>YES</code>,否则输出<code>No</code></li></ol><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stack&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1001</span>;<br><span class="hljs-built_in">stack</span>&lt;<span class="hljs-keyword">int</span>&gt; st;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> arr[maxn], m, n, k;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d%d&quot;</span>, &amp;m, &amp;n, &amp;k);<br>    <span class="hljs-keyword">while</span> (k--) &#123;<br>        <span class="hljs-keyword">while</span> (!st.empty()) &#123;st.pop();&#125; <span class="hljs-comment">// 每次都要清空栈</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;arr[i]);<br>        &#125;<br>        <span class="hljs-keyword">int</span> idx = <span class="hljs-number">0</span>; <span class="hljs-comment">// 输出数组的下标</span><br>        <span class="hljs-keyword">bool</span> flag = <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            st.push(i + <span class="hljs-number">1</span>); <span class="hljs-comment">// 把数字i+1压入栈</span><br>            <span class="hljs-keyword">if</span> (st.size() &gt; m) &#123;<br>                flag = <span class="hljs-literal">false</span>;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>            <span class="hljs-keyword">while</span> (!st.empty() &amp;&amp; st.top() == arr[idx]) &#123;<br>                st.pop();<br>                idx++;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (st.empty() &amp;&amp; flag) &#123;<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;YES\n&quot;</span>);&#125;<br>        <span class="hljs-keyword">else</span> &#123;<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;NO\n&quot;</span>);&#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><p>复杂度分析</p><ul><li>时间复杂度：$O(n+m)$</li><li>空间复杂度: $O(max(m,n))$</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法， 栈</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>547. Number of Provinces</title>
     <link href="/2021/01/07/547-Number-of-Provinces/"/>
     <url>/2021/01/07/547-Number-of-Provinces/</url>
@@ -146,9 +173,9 @@
     
     <tags>
       
-      <tag>JavaScript</tag>
-      
       <tag>ArcGIS For JS</tag>
+      
+      <tag>JavaScript</tag>
       
     </tags>
     
@@ -173,9 +200,9 @@
     
     <tags>
       
-      <tag>Cesium</tag>
-      
       <tag>JavaScript</tag>
+      
+      <tag>Cesium</tag>
       
       <tag>铁路</tag>
       
