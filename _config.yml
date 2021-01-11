@@ -32,7 +32,7 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :title.md # File name of new posts
+new_post_name: :year/:month/:title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
 external_link:
@@ -106,3 +106,11 @@ deploy:
   type: git
   repo: https://github.com/emhui/emhui.github.io
   branch: master
+
+# hexo-admin authentification
+admin:
+  username: emhui
+  password_hash: $2a$10$Yin1IAiAEwaSfdGnFU9.2OlQS7OgQeWq9z/1oreCEESALxiq55IT.
+  secret: Mrs.c would achieve her dream.
+  deployCommand: './deploy.sh'
+

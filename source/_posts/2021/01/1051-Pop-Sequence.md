@@ -2,7 +2,7 @@
 title: 1051 Pop Sequence
 date: 2021-01-07 16:06:42
 index_img: https://tva4.sinaimg.cn/large/0060lm7Tly1ftg6otk3cqj31hc0u014s.jpg
-tags: [PAT, 算法， 栈]
+tags: [PAT, 算法, 栈]
 categories: [PAT]
 math: true
 ---
