@@ -4,38 +4,6 @@
   
   
   <entry>
-    <title>tet</title>
-    <link href="/2021/01/11/tet/"/>
-    <url>/2021/01/11/tet/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>hell</title>
-    <link href="/2021/01/11/hell-1/"/>
-    <url>/2021/01/11/hell-1/</url>
-    
-    <content type="html"><![CDATA[<h1 id="621-任务调度器"><a href="#621-任务调度器" class="headerlink" title="621. 任务调度器"></a>621. 任务调度器</h1><p>给你一个用字符数组 tasks 表示的 CPU 需要执行的任务列表。其中每个字母表示一种不同种类的任务。任务可以以任意顺序执行，并且每个任务都可以在 1 个单位时间内执行完。在任何一个单位时间，CPU 可以完成一个任务，或者处于待命状态。</p><p>然而，两个 相同种类 的任务之间必须有长度为整数 n 的冷却时间，因此至少有连续 n 个单位时间内 CPU 在执行不同的任务，或者在待命状态。</p><p>你需要计算完成所有任务所需要的 最短时间 。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">leastInterval</span>(<span class="hljs-params">self, tasks: List[<span class="hljs-built_in">str</span>], n: <span class="hljs-built_in">int</span></span>) -&gt; int:</span><br>        <span class="hljs-comment"># 建立一个堆存储最大的值</span><br>        counter = collections.Counter(tasks)<br>        h = [(-val, key) <span class="hljs-keyword">for</span> key, val <span class="hljs-keyword">in</span> counter.items()]<br><br>        heapq.heapify(h)<br>        ans = <span class="hljs-built_in">list</span>()<br><br>        <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(h) &gt;= n + <span class="hljs-number">1</span>:<br><br>            visited_keys = <span class="hljs-built_in">list</span>() <span class="hljs-comment"># 记录每次遍历过的key</span><br>            <br>            <span class="hljs-comment"># 依次取出n个值</span><br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n + <span class="hljs-number">1</span>):<br>                _, temp_key = heapq.heappop(h)<br>                ans.append(temp_key)<br>                visited_keys.append(temp_key)<br>                counter[temp_key] -= <span class="hljs-number">1</span><br><br>            <span class="hljs-comment"># 取出来以后，再把值放回去</span><br>            <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> visited_keys:<br>                <span class="hljs-keyword">if</span> counter[key] &gt; <span class="hljs-number">0</span>:<br>                    heapq.heappush(h, (-counter[key], key))<br><br>        <span class="hljs-comment"># 如果h还有，则再次遍历</span><br>        <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(h) &gt; <span class="hljs-number">0</span>:<br>            size = <span class="hljs-built_in">len</span>(h)<br>            visited_keys = []<br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(size):<br>                _, key = heapq.heappop(h)<br>                visited_keys.append(key)<br>                ans.append(key)<br>                counter[key] -= <span class="hljs-number">1</span><br><br>            <span class="hljs-comment"># 补上剩下的等待时间</span><br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n + <span class="hljs-number">1</span> - size): ans.append(<span class="hljs-string">&#x27;0&#x27;</span>)<br><br>            <span class="hljs-comment"># 把遍历过的结果放回堆中</span><br>            <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> visited_keys:<br>                <span class="hljs-keyword">if</span> counter[key] &gt; <span class="hljs-number">0</span>:<br>                    heapq.heappush(h, (-counter[key],key))<br>            <br><br>        <span class="hljs-comment"># 处理尾部的0</span><br>        <span class="hljs-keyword">while</span> ans[<span class="hljs-number">-1</span>] == <span class="hljs-string">&#x27;0&#x27;</span>:<br>            ans.pop(<span class="hljs-number">-1</span>)<br>        <br>        print(ans)<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(ans)<br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-    
-    <tags>
-      
-      <tag>算法</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>1025 反转链表</title>
     <link href="/2021/01/11/1025-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/"/>
     <url>/2021/01/11/1025-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</url>
