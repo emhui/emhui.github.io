@@ -4,45 +4,6 @@
   
   
   <entry>
-    <title>hexo博客文章多了怎么管理</title>
-    <link href="/2021/01/11/%E5%85%B6%E4%BB%96-hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%9A%E4%BA%86%E6%80%8E%E4%B9%88%E7%AE%A1%E7%90%86/"/>
-    <url>/2021/01/11/%E5%85%B6%E4%BB%96-hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E5%A4%9A%E4%BA%86%E6%80%8E%E4%B9%88%E7%AE%A1%E7%90%86/</url>
-    
-    <content type="html"><![CDATA[<div class="note note-success">            <p>测试是否可以成功</p>          </div>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>测试</title>
-    <link href="/2021/01/11/%E6%B5%8B%E8%AF%95/"/>
-    <url>/2021/01/11/%E6%B5%8B%E8%AF%95/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>post</title>
-    <link href="/2021/01/11/%E7%AE%97%E6%B3%95-Smallest-String-With-Swaps/"/>
-    <url>/2021/01/11/%E7%AE%97%E6%B3%95-Smallest-String-With-Swaps/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>1202. Smallest String With Swaps</title>
     <link href="/2021/01/11/1202-Smallest-String-With-Swaps/"/>
     <url>/2021/01/11/1202-Smallest-String-With-Swaps/</url>
@@ -245,9 +206,9 @@
     
     <tags>
       
-      <tag>ArcGIS For JS</tag>
-      
       <tag>JavaScript</tag>
+      
+      <tag>ArcGIS For JS</tag>
       
     </tags>
     
@@ -272,9 +233,9 @@
     
     <tags>
       
-      <tag>JavaScript</tag>
-      
       <tag>Cesium</tag>
+      
+      <tag>JavaScript</tag>
       
       <tag>铁路</tag>
       
@@ -291,7 +252,7 @@
     <link href="/2021/01/03/hexo%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
     <url>/2021/01/03/hexo%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
     
-    <content type="html"><![CDATA[<p><code>hexo clean &amp;&amp; hexo d</code></p><p><del>如果使用这个命令，可能会清除<strong>CNAME</strong>文件</del></p><p>保持永久域名的方法</p><p>在<code>/source</code>目录下面建立一个文件<code>CNAME</code>,然后填入你的域名即可。<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="脚注">[1]</span></a></sup></p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><h2>参考</h2><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="https://hexo.fluid-dev.com/docs/guide/#%E8%84%9A%E6%B3%A8">脚注</a><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
+    <content type="html"><![CDATA[<p><code>hexo clean &amp;&amp; hexo d</code></p><p><del>如果使用这个命令，可能会清除<strong>CNAME</strong>文件</del></p><p>保持永久域名的方法</p><p>在<code>/source</code>目录下面建立一个文件<code>CNAME</code>,然后填入你的域名即可。<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="脚注">[1]</span></a></sup></p><h2 id="hexow文件管理-lt-span-class-”hint–top-hint–rounded”-aria-label-”hexo博客文章多了怎么管理"><a href="#hexow文件管理-lt-span-class-”hint–top-hint–rounded”-aria-label-”hexo博客文章多了怎么管理" class="headerlink" title="hexow文件管理&lt;span class=”hint–top hint–rounded” aria-label=”hexo博客文章多了怎么管理"></a>hexow文件管理<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote">&lt;span class=”hint–top hint–rounded” aria-label=”hexo博客文章多了怎么管理</h2><p>“&gt;[2]</span></a></sup></p><p>默认情况下使用<code>hexo new &quot;title&quot;</code>，所有文章都存放在<code>/source/_post</code>下面。随着文章的数量变多，该目录下面都文件也会越来越多，所以我们可以将文件进行归类。</p><ul><li>自己指定文章目录</li></ul><p><a href="https://hexo.io/zh-cn/docs/commands#new">官方</a>使用下面命令可以在创建文件的同时并归类。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new [layout] &lt;title&gt;<br></code></pre></td></tr></table></figure><p>比如我要创建一个文件<code>hexo new -p 其他/&quot;hexo 搭建blog&quot;.md &quot;hexo 搭建blog&quot;</code>,这样会在<code>_post</code>下面创建一个<code>其他</code>的目录，并且目录的名字是<code>heox 搭建blog.md</code>.但是这种方式非常繁琐。</p><ul><li>通过年月日管理文件</li></ul><p>因此使用第二种方式，在<code>_config.yml</code>中设置</p><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-symbol">new_post_name:</span> <span class="hljs-symbol">:year/</span><span class="hljs-symbol">:month/</span><span class="hljs-symbol">:title</span>.md<br></code></pre></td></tr></table></figure><p>通过这样的设置，仍使用之前创建文件的命令</p><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">hexo <span class="hljs-keyword">new</span> <span class="hljs-string">&quot;hexo文件管理&quot;</span><br></code></pre></td></tr></table></figure><p>运行该命令则会在创建一个以当前年月为子目录的结构。如图所示</p><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/TNJnDw.png" alt="TNJnDw"></p><blockquote><p>如果之前已经建立好的文件想按照时间归类可以直接把文件拖到对应目录</p></blockquote><p>总结：可以看到第二种方法比第一种简单，且按照时间管理文件也比较方便。</p><section class="footnotes"><h2>参考</h2><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="https://hexo.fluid-dev.com/docs/guide/#%E8%84%9A%E6%B3%A8">脚注</a><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a href="https://www.pianshen.com/article/81511649508/"><br>hexo博客文章多了怎么管理</a><a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
     
     
     <categories>
