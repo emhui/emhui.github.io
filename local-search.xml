@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>1032 Sharing</title>
+    <link href="/2021/01/12/1032-Sharing/"/>
+    <url>/2021/01/12/1032-Sharing/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1032-Sharing"><a href="#1032-Sharing" class="headerlink" title="1032 Sharing"></a>1032 Sharing</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/XC2jKw.png" alt="题目"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题是求链表的公共结点的首个结点地址。</p><p>⚠️这里是求<strong>公共结点的首个结点位置，而不是公共尾结点的首个结点位置。</strong></p><p>因此可以使用静态链表，在结构体中定义一个<code>flag</code>变量，表示该结点在第一个链表中出现过。</p><p>按照输入的第一个链表首地址，将第一链表的所有结点<code>flag</code>标志为<code>true</code>。</p><p>然后按照输入的第二个链表的首地址，找到第一个结点<code>flag=true</code>即为两个结点的首个公共结点。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>C++</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100010</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> &#123;</span><br>    <span class="hljs-keyword">int</span> address, next;<br>    <span class="hljs-keyword">char</span> data;<br>    <span class="hljs-keyword">bool</span> flag;<br>&#125;node[maxn];<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> begin_a, begin_b, n;<br>    <span class="hljs-keyword">int</span> address;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d%d&quot;</span>, &amp;begin_a, &amp;begin_b, &amp;n);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d &quot;</span>, &amp;address);<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%c%d&quot;</span>, &amp;node[address].data, &amp;node[address].next);<br>    &#125;<br>    <span class="hljs-comment">// init(node_a);</span><br>    <span class="hljs-comment">// init(node_b);</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; i++) &#123;node[i].flag = <span class="hljs-literal">false</span>;&#125;<br><br>    <span class="hljs-keyword">while</span>(begin_a != <span class="hljs-number">-1</span>) &#123;<br>        node[begin_a].flag = <span class="hljs-literal">true</span>;<br>        begin_a = node[begin_a].next;<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (begin_b != <span class="hljs-number">-1</span>) &#123;<br>        <span class="hljs-keyword">if</span> (node[begin_b].flag) &#123;<span class="hljs-keyword">break</span>;&#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            begin_b = node[begin_b].next;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (begin_b != <span class="hljs-number">-1</span>) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%05d\n&quot;</span>, begin_b);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;-1\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>一开始看错了题目意思，认为是要寻找<strong>公共结尾的首地址</strong>。下面代码是找<strong>公共结尾的首地址</strong>。具体思路如下</p><ol><li>创建两个静态链表<code>node_a, node_b</code>。</li><li>分别对两个链表设置位置<code>order</code>，同时计算出它们的长度<code>len1, len2</code>。</li><li>最后对两个链表，从后往前进行对比，若找到第一个不同的结点。将他们输出进行对比，若该结点后的一样的，那就输出，若不一样，则输出-1.</li></ol><p>C++</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// 思路：组成两个链表，记录他们的长度，然后从后往前进行比较</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100010</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> &#123;</span><br>    <span class="hljs-keyword">int</span> address, next, order;<br>    <span class="hljs-keyword">char</span> data;<br>&#125;node_a[maxn], node_b[maxn], node[maxn];<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">cmp</span><span class="hljs-params">(Node a, Node b)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a.order &lt; b.order;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> begin_a, begin_b, n;<br>    <span class="hljs-keyword">int</span> address;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d%d&quot;</span>, &amp;begin_a, &amp;begin_b, &amp;n);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d &quot;</span>, &amp;address);<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%c%d&quot;</span>, &amp;node[address].data, &amp;node[address].next);<br>        node[address].address = address;<br>    &#125;<br>    <span class="hljs-comment">// init(node_a);</span><br>    <span class="hljs-comment">// init(node_b);</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; i++) &#123;node_a[i].order = maxn; node_b[i].order = maxn;&#125;<br>    <span class="hljs-keyword">int</span> len1 = <span class="hljs-number">0</span>, len2 = <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">// arrange_order(begin_a, node, node_a, len1);</span><br>    <span class="hljs-comment">// arrange_order(begin_b, node, node_b, len2);</span><br>    <span class="hljs-keyword">while</span>(begin_a != <span class="hljs-number">-1</span>) &#123;<br>        node_a[begin_a].address = node[begin_a].address;<br>        node_a[begin_a].data = node[begin_a].data;<br>        node_a[begin_a].next = node[begin_a].next;<br>        node_a[begin_a].order = len1++;<br>        begin_a = node[begin_a].next;<br>    &#125;<br>    <span class="hljs-keyword">while</span>(begin_b != <span class="hljs-number">-1</span>) &#123;<br>        node_b[begin_b].address = node[begin_b].address;<br>        node_b[begin_b].data = node[begin_b].data;<br>        node_b[begin_b].next = node[begin_b].next;<br>        node_b[begin_b].order = len2++;<br>        begin_b = node[begin_b].next;<br>    &#125;<br>    sort(node_a, node_a + maxn, cmp);<br>    sort(node_b, node_b + maxn, cmp);<br>    <span class="hljs-keyword">while</span> (len1 &gt; <span class="hljs-number">0</span> &amp;&amp; len2 &gt; <span class="hljs-number">0</span> &amp;&amp; node_a[len1 - <span class="hljs-number">1</span>].address == node_b[len2 - <span class="hljs-number">1</span>].address) &#123;<br>        len1--;<br>        len2--;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (node_a[len1].address == node_b[len2].address) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%05d\n&quot;</span>, node_a[len1].address);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;-1\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>链表</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>C++</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1025 反转链表</title>
     <link href="/2021/01/11/1025-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/"/>
     <url>/2021/01/11/1025-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</url>
@@ -22,9 +53,9 @@
       
       <tag>PAT</tag>
       
-      <tag>算法</tag>
-      
       <tag>链表</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -152,9 +183,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>算法</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
@@ -181,9 +212,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>算法</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
@@ -210,9 +241,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>算法</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
