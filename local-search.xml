@@ -4,6 +4,39 @@
   
   
   <entry>
+    <title>1052 Linked List Sorting</title>
+    <link href="/2021/01/12/1052-Linked-List-Sorting/"/>
+    <url>/2021/01/12/1052-Linked-List-Sorting/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1052-Linked-List-Sorting"><a href="#1052-Linked-List-Sorting" class="headerlink" title="1052 Linked List Sorting"></a>1052 Linked List Sorting</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><div class="note note-warning">            <p>仔细看题，考虑周全</p>          </div><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/7Q2QCm.png" alt="题目"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>这道题和之前的题目一样，使用静态数组，然后进行排序。但是排序需要注意。因为存在无效数据，所以对于无效的结点，需要将结点放到最后面，然后再根据<code>key</code>值进行排序。</p><p><code>cmp</code>函数</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">cmp</span><span class="hljs-params">(Node a, Node b)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (a.flag == <span class="hljs-literal">false</span> || b.flag == <span class="hljs-literal">false</span>) &#123; <span class="hljs-comment">// 若是无效数据，就放到后面去，若数据有效，则根据key值放到前面</span><br>        <span class="hljs-keyword">return</span> a.flag &gt; b.flag;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span> a.key &lt; b.key;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>⚠️</p><ul><li>记住有无效数据，即结点不在给定的头结点链表中，这些数据需要排除。通过设置<code>flag</code>来判断它是否存在。</li><li>需要考虑有效结点数量为0，设置<code>count</code>统计有效结点数量。</li></ul><p>下面代码是实现有效结点的统计和标记</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">int</span> p = head, count = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">while</span> (p != <span class="hljs-number">-1</span>) &#123;<br>node[p].flag = <span class="hljs-literal">true</span>;<br>count++;<br>p = node[p].next;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100010</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Node</span> &#123;</span><br>    <span class="hljs-keyword">int</span> address, key, next, order;<br>    <span class="hljs-keyword">bool</span> flag;<br>&#125;node[maxn];<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">cmp</span><span class="hljs-params">(Node a, Node b)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (a.flag == <span class="hljs-literal">false</span> || b.flag == <span class="hljs-literal">false</span>) &#123; <span class="hljs-comment">// 若是无效数据，就放到后面去，若数据有效，则根据key值放到前面</span><br>        <span class="hljs-keyword">return</span> a.flag &gt; b.flag;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span> a.key &lt; b.key;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> head, n;<br>    <span class="hljs-keyword">int</span> address;<br>    <span class="hljs-keyword">int</span> order = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; i++) &#123;<br>        node[i].key = maxn;<br>        node[i].flag = <span class="hljs-literal">false</span>; <span class="hljs-comment">// 过滤无效结点</span><br>    &#125;<br><br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;n, &amp;head);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;address);<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;node[address].key, &amp;node[address].next);<br>        node[address].address = address;<br>    &#125;<br><br>    <span class="hljs-keyword">int</span> p = head, count = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (p != <span class="hljs-number">-1</span>) &#123;<br>        node[p].flag = <span class="hljs-literal">true</span>;<br>        count++;<br>        p = node[p].next;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (count == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;0 -1\n&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        n = count;<br>        sort(node, node + maxn, cmp); <span class="hljs-comment">// 按照order进行排序</span><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %05d\n&quot;</span>, n, node[<span class="hljs-number">0</span>].address);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n - <span class="hljs-number">1</span>; i++) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%05d %d %05d\n&quot;</span>, node[i].address, node[i].key, node[i + <span class="hljs-number">1</span>].address);<br>        &#125;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%05d %d -1\n&quot;</span>, node[n - <span class="hljs-number">1</span>].address, node[n - <span class="hljs-number">1</span>].key);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>链表</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>C++</tag>
+      
+      <tag>排序</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1032 Sharing</title>
     <link href="/2021/01/12/1032-Sharing/"/>
     <url>/2021/01/12/1032-Sharing/</url>
@@ -22,11 +55,11 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
+      <tag>链表</tag>
       
       <tag>算法</tag>
       
-      <tag>链表</tag>
+      <tag>C++</tag>
       
     </tags>
     
@@ -53,9 +86,9 @@
       
       <tag>PAT</tag>
       
-      <tag>算法</tag>
-      
       <tag>链表</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -183,9 +216,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>算法</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
@@ -212,9 +245,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>算法</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
@@ -241,9 +274,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>算法</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
