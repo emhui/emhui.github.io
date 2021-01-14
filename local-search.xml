@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>1091 Acute Stroke</title>
+    <link href="/2021/01/14/1091-Acute-Stroke/"/>
+    <url>/2021/01/14/1091-Acute-Stroke/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1091-Acute-Stroke"><a href="#1091-Acute-Stroke" class="headerlink" title="1091 Acute Stroke"></a>1091 Acute Stroke</h1><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/VMhdDm.png" alt="题目"></p><p>部分专有名词</p><ul><li><code>MBR</code>: (Magnetic Resonance Imaging) 核磁共振成像。</li><li><code>threshold</code>: 门槛,阈值。</li></ul><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题意思是<strong>给出一个三维数组,数组元素的取值为0或1。与某一个元素相邻的元素为其上、下、左、右、前、后这6个方向的邻接元素。另外,若干个相邻的”1”称为一个“块” (不必两两相邻,只要与块中某一个”1”相邻,该”1”就在块中),而如果某个块中的“1”的个数不低于T个,那么称这个块为“卒中核心区”。现在需要求解所有卒中核心区中的1的个数之和。</strong></p><p>本题是一个三维的BFS。基本思路是:枚举三维数组中的每一个位置,如果为0,则跳过;如果为1,则使用BFS查询与该位置相邻的6个位置(前提是不出界),判断它们是否为1 (如果某个相邻的位置为1,则同样去查询与该位置相邻的6个位置,直到整个”1”块访问完毕)。而为了防止重复,可以设置一个bool型数组<code>visited</code>来记录每个位置是否在BFS中已入过队。</p><p>其中枚举6个方向的代码如下</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">int</span> X[<span class="hljs-number">6</span>] = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;; <span class="hljs-comment">// X方向移动</span><br><span class="hljs-keyword">int</span> Y[<span class="hljs-number">6</span>] = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;; <span class="hljs-comment">// Y方向移动</span><br><span class="hljs-keyword">int</span> Z[<span class="hljs-number">6</span>] = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-1</span>&#125;; <span class="hljs-comment">// Z方向移动</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">6</span>; i++) &#123;<br><span class="hljs-keyword">int</span> newX = top.x + X[i];<br><span class="hljs-keyword">int</span> newY = top.y + Y[i];<br><span class="hljs-keyword">int</span> newZ = top.z + Z[i];<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// 题目意思，计算每个点附近的连通情况，若连通，即1的数量，若该层1的数量大于T则符合条件</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;queue&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">node</span>&#123;</span><br>    <span class="hljs-keyword">int</span> x, y, z;<br>&#125;Node;<br><br><span class="hljs-keyword">int</span> M, N, L, T;<br><br><span class="hljs-keyword">int</span> pixel[<span class="hljs-number">1296</span>][<span class="hljs-number">130</span>][<span class="hljs-number">61</span>]; <span class="hljs-comment">// M N L</span><br><span class="hljs-keyword">bool</span> visited[<span class="hljs-number">1296</span>][<span class="hljs-number">130</span>][<span class="hljs-number">61</span>] = &#123;<span class="hljs-literal">false</span>&#125;; <span class="hljs-comment">// M N L</span><br><br><span class="hljs-keyword">int</span> X[<span class="hljs-number">6</span>] = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;; <span class="hljs-comment">// X方向移动</span><br><span class="hljs-keyword">int</span> Y[<span class="hljs-number">6</span>] = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;; <span class="hljs-comment">// Y方向移动</span><br><span class="hljs-keyword">int</span> Z[<span class="hljs-number">6</span>] = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-1</span>&#125;; <span class="hljs-comment">// Z方向移动</span><br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isVaildNode</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">int</span> z)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (x &lt; <span class="hljs-number">0</span> || x &gt;= M || y &lt; <span class="hljs-number">0</span> || y &gt;= N || z &lt; <span class="hljs-number">0</span> || z &gt;= L) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">if</span> (pixel[x][y][z] == <span class="hljs-number">0</span> || visited[x][y][z] == <span class="hljs-literal">true</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">bfs</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">int</span> z)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> num = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">queue</span>&lt;node&gt; Q;<br>    Node.x = x, Node.y = y, Node.z = z;<br>    Q.push(Node);<br>    visited[x][y][z] = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 记住这个一定要写。当前的入队</span><br>    <span class="hljs-keyword">while</span> (!Q.empty()) &#123;<br>        node top = Q.front();<br>        Q.pop();<br>        num++; <span class="hljs-comment">// 满足数量+1</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">6</span>; i++) &#123;<br>            <span class="hljs-keyword">int</span> newX = top.x + X[i];<br>            <span class="hljs-keyword">int</span> newY = top.y + Y[i];<br>            <span class="hljs-keyword">int</span> newZ = top.z + Z[i];<br>            <span class="hljs-keyword">if</span> (isVaildNode(newX, newY, newZ)) &#123;<br>                Node.x = newX, Node.y = newY, Node.z = newZ;<br>                Q.push(Node);<br>                visited[newX][newY][newZ] = <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> num &gt;= T ? num : <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d%d%d&quot;</span>, &amp;M, &amp;N, &amp;L, &amp;T);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> z = <span class="hljs-number">0</span>; z &lt; L; z++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> x = <span class="hljs-number">0</span>; x &lt; M; x++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> y = <span class="hljs-number">0</span>; y &lt; N; y++) &#123;<br>                <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;pixel[x][y][z]); <span class="hljs-comment">// 注意xyz顺序</span><br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">int</span> ans = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> z = <span class="hljs-number">0</span>; z &lt; L; z++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> x = <span class="hljs-number">0</span>; x &lt; M; x++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> y = <span class="hljs-number">0</span>; y &lt; N; y++)<br>            &#123;<br>                <span class="hljs-keyword">if</span> (pixel[x][y][z] == <span class="hljs-number">1</span> &amp;&amp; visited[x][y][z] == <span class="hljs-literal">false</span>)&#123;<br>                    ans += bfs(x, y, z);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, ans);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>bfs</tag>
+      
+      <tag>图</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>990. Satisfiability of Equality Equations</title>
     <link href="/2021/01/14/990-Satisfiability-of-Equality-Equations/"/>
     <url>/2021/01/14/990-Satisfiability-of-Equality-Equations/</url>
@@ -262,11 +293,11 @@
       
       <tag>算法</tag>
       
-      <tag>dfs</tag>
+      <tag>bfs</tag>
       
       <tag>图</tag>
       
-      <tag>bfs</tag>
+      <tag>dfs</tag>
       
       <tag>union-find</tag>
       
@@ -324,11 +355,11 @@
       
       <tag>算法</tag>
       
-      <tag>dfs</tag>
+      <tag>bfs</tag>
       
       <tag>图</tag>
       
-      <tag>bfs</tag>
+      <tag>dfs</tag>
       
       <tag>union-find</tag>
       
