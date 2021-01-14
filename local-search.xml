@@ -4,6 +4,39 @@
   
   
   <entry>
+    <title>1086 Tree Traversals Again</title>
+    <link href="/2021/01/14/1086-Tree-Traversals-Again/"/>
+    <url>/2021/01/14/1086-Tree-Traversals-Again/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1086-Tree-Traversals-Again"><a href="#1086-Tree-Traversals-Again" class="headerlink" title="1086 Tree Traversals Again"></a>1086 Tree Traversals Again</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/Fo0YeY.png" alt="Fo0YeY"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题使用栈模拟先序遍历和中序遍历，其中</p><ul><li><code>push</code>: 1,2,3,4,5,6 为先序遍历</li><li><code>pop</code>: 3,2,4,1,6,5 为中序遍历</li></ul><p>输出它的后续遍历。因此可以先使用栈储存它的输入，同时构建<code>preorder, inorder</code>序列。再通过<strong>先序遍历和中序遍历求出后序遍历</strong></p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stack&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; preorder, inorder;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TreeNode</span> &#123;</span><br>    <span class="hljs-keyword">int</span> val;<br>    TreeNode *left, *right;<br>&#125;;<br><br><span class="hljs-function">TreeNode* <span class="hljs-title">createTree</span><span class="hljs-params">(<span class="hljs-keyword">int</span> preL, <span class="hljs-keyword">int</span> preR, <span class="hljs-keyword">int</span> inL, <span class="hljs-keyword">int</span> inR, <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; preorder, <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; inorder)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (preL &gt; preR) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br>    TreeNode *root = <span class="hljs-keyword">new</span> TreeNode;<br>    root-&gt;val = preorder[preL];<br>    <span class="hljs-keyword">int</span> mid = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (mid = inL; mid &lt;= inR; mid++) &#123;<br>        <span class="hljs-keyword">if</span> (inorder[mid] == preorder[preL]) <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-keyword">int</span> leftNum = mid - inL;<br>    root-&gt;left = createTree(preL + <span class="hljs-number">1</span>, preL + leftNum, inL, mid - <span class="hljs-number">1</span>, preorder, inorder);<br>    root-&gt;right = createTree(preL + leftNum + <span class="hljs-number">1</span>, preR, mid + <span class="hljs-number">1</span>, inR, preorder, inorder);<br>    <span class="hljs-keyword">return</span> root;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">posttravel</span><span class="hljs-params">(TreeNode* root, <span class="hljs-keyword">int</span> &amp;n)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (root == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span>;<br>    posttravel(root-&gt;left, n);<br>    posttravel(root-&gt;right, n);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, root-&gt;val);<br>    <span class="hljs-keyword">if</span> (--n) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; &quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">char</span> s[<span class="hljs-number">5</span>];<br>    <span class="hljs-built_in">stack</span>&lt;<span class="hljs-keyword">int</span>&gt; st;<br>    <span class="hljs-keyword">int</span> n, val;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>*n; i++) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%s&quot;</span>, s);<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(s, <span class="hljs-string">&quot;Push&quot;</span>) == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;val);<br>            st.push(val);<br>            preorder.push_back(val);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            inorder.push_back(st.top());<br>            st.pop();<br>        &#125;<br>    &#125;<br>    TreeNode* root = createTree(<span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>, preorder, inorder);<br>    posttravel(root, n);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>中序遍历</tag>
+      
+      <tag>二叉树</tag>
+      
+      <tag>先序遍历</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>105. 从前序与中序遍历序列构造二叉树</title>
     <link href="/2021/01/14/105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
     <url>/2021/01/14/105-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
@@ -49,9 +82,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>bfs</tag>
       
@@ -115,9 +148,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>bfs</tag>
       
@@ -204,9 +237,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>dfs</tag>
       
@@ -233,11 +266,11 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
       
       <tag>链表</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -293,11 +326,11 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
       
       <tag>链表</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -326,11 +359,11 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
       
       <tag>链表</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -357,11 +390,11 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
       
       <tag>链表</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -419,9 +452,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>栈</tag>
       
@@ -487,9 +520,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -516,9 +549,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -545,9 +578,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
