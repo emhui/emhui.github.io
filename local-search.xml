@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>BFS遍历模板</title>
+    <link href="/2021/01/15/BFS%E9%81%8D%E5%8E%86%E6%A8%A1%E6%9D%BF/"/>
+    <url>/2021/01/15/BFS%E9%81%8D%E5%8E%86%E6%A8%A1%E6%9D%BF/</url>
+    
+    <content type="html"><![CDATA[<h1 id="BFS遍历模板"><a href="#BFS遍历模板" class="headerlink" title="BFS遍历模板"></a>BFS遍历模板</h1><div class="note note-warning">            <p>有两种</p><ul><li>以结点为单位进行搜索，适用于<strong>图</strong></li><li>以层为单位进行搜索，适用于<strong>树</strong></li></ul>          </div><h2 id="结点为单位：图"><a href="#结点为单位：图" class="headerlink" title="结点为单位：图"></a>结点为单位：图</h2><p>C++</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function">def <span class="hljs-title">bfs</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span></span>&#123;<br>visited[x] = <span class="hljs-literal">true</span>;<br><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt; q;<br>q.push(x);<br><span class="hljs-keyword">while</span> (!q.empty()) &#123;<br><span class="hljs-keyword">int</span> node = q.front();<br>q.pop();<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; graphic[node].size(); i++) &#123;<br><span class="hljs-keyword">if</span> (!visited[graphic[node][i]]) &#123;<br>q.push(graphic[node][i]);<br>&#125;<br>&#125;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>Python</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">BFS</span>(<span class="hljs-params">x</span>):</span><br>    visit(x)<br>    bfs = collections.deque([x])<br>    <span class="hljs-keyword">while</span> bfs:<br>        v = bfs.popleft()<br>        <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> neighbor(v):<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> visited(n):<br>                visit(n)<br>                bfs.append(n)<br>    <span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure><h2 id="以层为单位：树"><a href="#以层为单位：树" class="headerlink" title="以层为单位：树"></a>以层为单位：树</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">maxDepth</span><span class="hljs-params">(Node* root)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (root == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">int</span> depth = <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">queue</span>&lt;Node*&gt; q;<br>        q.push(root);<br>        <span class="hljs-keyword">while</span> (!q.empty()) &#123;<br>            <span class="hljs-keyword">int</span> size = q.size();<br><span class="hljs-comment">// 操作。这里为计算树的深度</span><br>            depth++;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>                Node* node = q.front();<br>                q.pop();<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; node-&gt;children.size(); j++) &#123;<br>                    q.push(node-&gt;children[j]);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> depth;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure><p>Python</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">BFS</span>(<span class="hljs-params">x</span>):</span><br>    visit(x)<br>    bfs = collections.deque([x])<br>    <span class="hljs-keyword">while</span> bfs:<br>        num_level = <span class="hljs-built_in">len</span>(bfs)<br>        <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_level)<br>            v = bfs.popleft()<br>            <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> neighbor(v):<br>                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> visited(v):<br>                    visit(n)<br>                    bfs.append(n)<br>    <span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>PAT</tag>
+      
+      <tag>bfs</tag>
+      
+      <tag>图</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1102 Invert a Binary Tree</title>
     <link href="/2021/01/15/1102-Invert-a-Binary-Tree/"/>
     <url>/2021/01/15/1102-Invert-a-Binary-Tree/</url>
@@ -20,9 +51,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>二叉树</tag>
       
@@ -49,13 +80,13 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
       
-      <tag>二叉树</tag>
+      <tag>PAT</tag>
       
       <tag>中序遍历</tag>
+      
+      <tag>二叉树</tag>
       
       <tag>先序遍历</tag>
       
@@ -111,9 +142,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>bfs</tag>
       
@@ -146,11 +177,11 @@
       
       <tag>算法</tag>
       
+      <tag>后序遍历</tag>
+      
       <tag>leetcode</tag>
       
       <tag>二叉树</tag>
-      
-      <tag>后序遍历</tag>
       
       <tag>前序遍历</tag>
       
@@ -177,9 +208,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>bfs</tag>
       
@@ -266,9 +297,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>dfs</tag>
       
@@ -295,13 +326,13 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
-      <tag>C++</tag>
-      
       <tag>算法</tag>
       
+      <tag>PAT</tag>
+      
       <tag>链表</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
@@ -355,13 +386,13 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
-      <tag>C++</tag>
-      
       <tag>算法</tag>
       
+      <tag>PAT</tag>
+      
       <tag>链表</tag>
+      
+      <tag>C++</tag>
       
       <tag>排序</tag>
       
@@ -388,13 +419,13 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
-      <tag>C++</tag>
-      
       <tag>算法</tag>
       
+      <tag>PAT</tag>
+      
       <tag>链表</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
@@ -419,9 +450,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>链表</tag>
       
@@ -481,9 +512,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>栈</tag>
       
@@ -512,9 +543,9 @@
       
       <tag>算法</tag>
       
-      <tag>leetcode</tag>
-      
       <tag>bfs</tag>
+      
+      <tag>leetcode</tag>
       
       <tag>图</tag>
       
@@ -549,11 +580,11 @@
     
     <tags>
       
+      <tag>算法</tag>
+      
       <tag>PAT</tag>
       
       <tag>C++</tag>
-      
-      <tag>算法</tag>
       
     </tags>
     
@@ -578,11 +609,11 @@
     
     <tags>
       
+      <tag>算法</tag>
+      
       <tag>PAT</tag>
       
       <tag>C++</tag>
-      
-      <tag>算法</tag>
       
     </tags>
     
@@ -607,11 +638,11 @@
     
     <tags>
       
+      <tag>算法</tag>
+      
       <tag>PAT</tag>
       
       <tag>C++</tag>
-      
-      <tag>算法</tag>
       
     </tags>
     
