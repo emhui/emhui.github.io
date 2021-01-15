@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>1102 Invert a Binary Tree</title>
+    <link href="/2021/01/15/1102-Invert-a-Binary-Tree/"/>
+    <url>/2021/01/15/1102-Invert-a-Binary-Tree/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1102-Invert-a-Binary-Tree"><a href="#1102-Invert-a-Binary-Tree" class="headerlink" title="1102 Invert a Binary Tree"></a>1102 Invert a Binary Tree</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/wAVNFn.png" alt="wAVNFn"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><div class="note note-warning">            <p>难点：输入数据的处理</p>          </div><ol><li>使用静态二叉树结构</li><li>设置一个bool数组，假设所有结点是根结点。当读取子结点的时候，设置子结点为false</li><li>使用后序遍历交换两边</li><li>使用层次和中序遍历输出结果</li></ol><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// 1. 使用静态二叉树结构</span><br><span class="hljs-comment">// 2. 设置一个bool数组，假设所有结点是根结点。当读取子结点的时候，设置子结点为false</span><br><span class="hljs-comment">// 3. 使用后序遍历交换两边</span><br><span class="hljs-comment">// 4. 使用层次和中序遍历输出结果</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;queue&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10010</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TreeNode</span>&#123;</span><br>    <span class="hljs-keyword">int</span> left, right;<br>&#125;treenode[maxn];<br><br><span class="hljs-keyword">bool</span> isRoot[maxn]; <span class="hljs-comment">// 无法设置为true，这样只可以设置第一个值为true。但是设置为false却可以。</span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">ch2num</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;-&#x27;</span>) &#123;<span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;&#125;<br>    isRoot[c - <span class="hljs-string">&#x27;0&#x27;</span>] = <span class="hljs-literal">false</span>; <span class="hljs-comment">// 子结点</span><br>    <span class="hljs-keyword">return</span> c - <span class="hljs-string">&#x27;0&#x27;</span>;<br>&#125;<br><br><span class="hljs-comment">// 交换左右子树</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">posttravel</span><span class="hljs-params">(<span class="hljs-keyword">int</span> root)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (root == <span class="hljs-number">-1</span>) <span class="hljs-keyword">return</span>;<br>    posttravel(treenode[root].left);<br>    posttravel(treenode[root].right);<br>    swap(treenode[root].left, treenode[root].right);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bfs</span><span class="hljs-params">(<span class="hljs-keyword">int</span> root, <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt; q;<br>    q.push(root);<br>    <span class="hljs-keyword">while</span> (!q.empty()) &#123;<br>        <span class="hljs-keyword">int</span> node = q.front();<br>        q.pop();<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, node);<br>        <span class="hljs-keyword">if</span> (--n) &#123;<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; &quot;</span>);&#125;<br>        <span class="hljs-keyword">if</span> (treenode[node].left != <span class="hljs-number">-1</span>) q.push(treenode[node].left);<br>        <span class="hljs-keyword">if</span> (treenode[node].right != <span class="hljs-number">-1</span>) q.push(treenode[node].right);<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">intravel</span><span class="hljs-params">(<span class="hljs-keyword">int</span> root, <span class="hljs-keyword">int</span>&amp; n)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (root == <span class="hljs-number">-1</span>) <span class="hljs-keyword">return</span>;<br>    intravel(treenode[root].left, n);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, root);<br>    <span class="hljs-keyword">if</span> (--n) &#123;<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; &quot;</span>);&#125;<br>    intravel(treenode[root].right, n);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">memset</span>(isRoot, <span class="hljs-literal">true</span>, <span class="hljs-keyword">sizeof</span>(isRoot)); <span class="hljs-comment">// 需要引入头文件 &lt;memory.h&gt; or &lt;string.h&gt;</span><br>    <span class="hljs-keyword">int</span> n;<br>    <span class="hljs-keyword">char</span> c1, c2;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        getchar(); <span class="hljs-comment">//吸收回车字符</span><br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%c %c&quot;</span>, &amp;c1, &amp;c2);<br>        treenode[i].left = ch2num(c1);<br>        treenode[i].right = ch2num(c2);<br>    &#125;<br>    <span class="hljs-keyword">int</span> root = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-keyword">if</span> (isRoot[i]) &#123;<br>            root = i;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>    posttravel(root);<br>    bfs(root, n);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);<br>    intravel(root, n);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul><li><code>memset</code>的使用需要引入头文件<code>memory.h</code> or <code>string.h</code></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>二叉树</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1086 Tree Traversals Again</title>
     <link href="/2021/01/14/1086-Tree-Traversals-Again/"/>
     <url>/2021/01/14/1086-Tree-Traversals-Again/</url>
@@ -24,9 +53,9 @@
       
       <tag>算法</tag>
       
-      <tag>中序遍历</tag>
-      
       <tag>二叉树</tag>
+      
+      <tag>中序遍历</tag>
       
       <tag>先序遍历</tag>
       
@@ -117,11 +146,11 @@
       
       <tag>算法</tag>
       
-      <tag>后序遍历</tag>
-      
       <tag>leetcode</tag>
       
       <tag>二叉树</tag>
+      
+      <tag>后序遍历</tag>
       
       <tag>前序遍历</tag>
       
@@ -483,9 +512,9 @@
       
       <tag>算法</tag>
       
-      <tag>bfs</tag>
-      
       <tag>leetcode</tag>
+      
+      <tag>bfs</tag>
       
       <tag>图</tag>
       
