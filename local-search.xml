@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>1090 Highest Price in Supply Chain</title>
+    <link href="/2021/01/15/1090-Highest-Price-in-Supply-Chain/"/>
+    <url>/2021/01/15/1090-Highest-Price-in-Supply-Chain/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1090-Highest-Price-in-Supply-Chain"><a href="#1090-Highest-Price-in-Supply-Chain" class="headerlink" title="1090 Highest Price in Supply Chain"></a>1090 Highest Price in Supply Chain</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/l1FlAd.png" alt="题目"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>给出一个供应链网络，其中有三类成员</p><ul><li>retailers</li><li>distributors</li><li>suppliers</li></ul><p>输入分析</p><p>首先输入三个参数</p><ul><li>$N$: 供应网络上成员的数量，成员的ID范围 $0 \sim N - 1$</li><li>$P$: 顶级（根）供应商的每件货物的价格</li><li>$r$: 每一级传下来增加的价格百分比。</li></ul><p>接下来是$N$个输入。每个输入假设叫做<code>S_i</code>。<code>S_i</code>别是的是第$i$个成员的供应商是谁。</p><p>输出分析</p><p>输出到零售商最高的价值和拥有最高价格的零售商的数量。</p><p>根据上面分析。转化为树的题目，即<strong>求一棵树最大深度的叶子结点数量和最大深度</strong>。</p><p>考虑使用静态二叉树，其结构如下,因为不需要存储数据，只需要存储子结点即可。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100010</span>;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TreeNode</span>&#123;</span><br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; children;<br>&#125;treenode[maxn];<br></code></pre></td></tr></table></figure><p>然后在输入数据的时候构建一个树，将输入的<code>id</code>作为树的索引，而当前索引<code>i</code>则是树<code>id</code>的子结点。</p><p>⚠️ 当<code>id=-1</code>是需要记录一下根结点。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br><span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;id);<br><span class="hljs-keyword">if</span> (id != <span class="hljs-number">-1</span>) &#123;treenode[id].children.push_back(i);&#125;<br><span class="hljs-keyword">else</span> &#123;root = i;&#125; <span class="hljs-comment">// 根结点</span><br>&#125;<br></code></pre></td></tr></table></figure><p>最后使用<code>BFS</code>对每一层进行遍历。其中每一层的数量正好是栈的数量<code>q.size()</code>。所以只需要在每一层不断更新<code>highestPrice,maxNum</code>两个变量即可。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// 最后一层有多少个叶子结点。然后计算出它的最高价格</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;queue&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100010</span>;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TreeNode</span>&#123;</span><br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; children;<br>&#125;treenode[maxn];<br><br><span class="hljs-keyword">int</span> n; <span class="hljs-comment">// n个供应商，id供应商id，根供应商</span><br><span class="hljs-keyword">double</span> P, r;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bfs</span><span class="hljs-params">(<span class="hljs-keyword">int</span> root)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> depth = <span class="hljs-number">0</span>, maxNum = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">double</span> highestPrice = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt; q;<br>    q.push(root);<br>    <span class="hljs-keyword">while</span> (!q.empty()) &#123;<br>        <span class="hljs-keyword">int</span> size = q.size();<br>        maxNum = size;<br>        highestPrice = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>            <span class="hljs-keyword">int</span> node = q.front(); q.pop();<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; treenode[node].children.size(); j++) &#123;<br>                q.push(treenode[node].children[j]);<br>            &#125;<br>        &#125;<br>        highestPrice = P * <span class="hljs-built_in">pow</span>(<span class="hljs-number">1</span>+r, depth++);<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%.2lf %d\n&quot;</span>, highestPrice, maxNum);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> id, root;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%lf%lf&quot;</span>, &amp;n, &amp;P, &amp;r);<br>    r /= <span class="hljs-number">100</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;id);<br>        <span class="hljs-keyword">if</span> (id != <span class="hljs-number">-1</span>) &#123;treenode[id].children.push_back(i);&#125;<br>        <span class="hljs-keyword">else</span> &#123;root = i;&#125; <span class="hljs-comment">// 根结点</span><br>    &#125;<br>    bfs(root);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>PAT</tag>
+      
+      <tag>bfs</tag>
+      
+      <tag>树</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>BFS遍历模板</title>
     <link href="/2021/01/15/BFS%E9%81%8D%E5%8E%86%E6%A8%A1%E6%9D%BF/"/>
     <url>/2021/01/15/BFS%E9%81%8D%E5%8E%86%E6%A8%A1%E6%9D%BF/</url>
@@ -27,6 +58,39 @@
       <tag>bfs</tag>
       
       <tag>图</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>1079 Total Sales of Supply Chain</title>
+    <link href="/2021/01/15/1079-Total-Sales-of-Supply-Chain/"/>
+    <url>/2021/01/15/1079-Total-Sales-of-Supply-Chain/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1079-Total-Sales-of-Supply-Chain"><a href="#1079-Total-Sales-of-Supply-Chain" class="headerlink" title="1079 Total Sales of Supply Chain"></a>1079 Total Sales of Supply Chain</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/vlJ1r4.png" alt="题目"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>先分析题目想表达什么意思。</p><p>一个供应链网络有三类角色</p><ul><li>retailers</li><li>distributors</li><li>suppliers</li></ul><p>输入分析</p><p>首先输入三个参数</p><ul><li>$N$: 供应网络上成员的数量，成员的ID范围 $0 \sim N - 1$</li><li>$P$: 顶级（根）供应商的每件货物的价格</li><li>$r$: 每一级传下来增加的价格百分比。</li></ul><p>接下来是$N$个输入。</p><p>$K_i \quad ID[1] \quad ID[2] … ID[K_i]$</p><ul><li>$i$表示第$i$个供应商。</li><li>$K_i$表示第$i$个供应商供应成员的数量。</li><li>$ID$，则是成员的$ID$。</li><li>⭐️其中$K_i = 0$表示的是$ID=i$的成员是零售商，然后后面那个数则表示该零售商进货的数量。</li></ul><p>根据题目中的输入，可以得到下面这个树形图。</p><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/l7lba9.png" alt="l7lba9"></p><p>因此题目要求的就是到零售商这一级的总销售额。</p><p>$$<br>1.8*((7+9)<em>(1+0.01)^2 + (4+3)</em>(1+0.01)^3)=42.4<br>$$</p><p>根据上面分析。这里使用静态二叉树。我们需要将数据分成两种</p><ul><li>非叶子结点。$K_i!=0$的结点。该结点需要存储<strong>供应链的下一级(子结点)</strong></li><li>叶子结点。$K_i=0$的结点。该结点需要存储<strong>进货量</strong>。</li></ul><p>然后使用<code>BFS,DFS</code>求出叶子结点深度。在计算结果即可。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>C++</p><blockquote><p>bfs和dfs方法两者都写了，把注释取消即可。</p></blockquote><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;queue&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100010</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TreeNode</span>&#123;</span><br>    <span class="hljs-keyword">int</span> val;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; children;<br>&#125;treenode[maxn];<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dfs</span><span class="hljs-params">(<span class="hljs-keyword">int</span> idx, <span class="hljs-keyword">int</span> depth, <span class="hljs-keyword">double</span> r, <span class="hljs-keyword">double</span>&amp; ans)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (treenode[idx].children.size() == <span class="hljs-number">0</span>) &#123;<br>        ans += treenode[idx].val * <span class="hljs-built_in">pow</span>(<span class="hljs-number">1</span> + r, depth);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; treenode[idx].children.size(); i++) &#123;<br>        dfs(treenode[idx].children[i], depth + <span class="hljs-number">1</span>, r, ans);<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bfs</span><span class="hljs-params">(<span class="hljs-keyword">int</span> idx, <span class="hljs-keyword">int</span> depth, <span class="hljs-keyword">double</span> r, <span class="hljs-keyword">double</span>&amp; ans)</span> </span>&#123;<br>    <span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt; q;<br>    q.push(<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">while</span> (!q.empty()) &#123;<br>        <span class="hljs-keyword">int</span> size = q.size();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>             <span class="hljs-keyword">int</span> node = q.front();<br>            q.pop();<br>            <span class="hljs-keyword">if</span> (treenode[node].children.size() == <span class="hljs-number">0</span>) &#123;<br>                ans += treenode[node].val * <span class="hljs-built_in">pow</span>(<span class="hljs-number">1</span> + r, depth);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; treenode[node].children.size(); i++) &#123;<br>                    q.push(treenode[node].children[i]);<br>                &#125;<br>            &#125;<br>        &#125;<br>        depth++;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> n;<br>    <span class="hljs-keyword">double</span> P, r;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%lf%lf&quot;</span>, &amp;n, &amp;P, &amp;r);<br>    <span class="hljs-keyword">int</span> val, k;<br>    r /= <span class="hljs-number">100</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;k);<br>        <span class="hljs-keyword">if</span> (k == <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// k = 0证明是叶子结点</span><br>            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;treenode[i].val);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; k; j++) &#123;<br>                <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;val);<br>                treenode[i].children.push_back(val);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">double</span> ans = <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">// dfs(0,0,r,ans);</span><br>    bfs(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,r,ans);<br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%.1lf\n&quot;</span>, P * ans);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>PAT</tag>
+      
+      <tag>bfs</tag>
+      
+      <tag>树</tag>
+      
+      <tag>dfs</tag>
       
     </tags>
     
@@ -330,9 +394,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>链表</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
@@ -390,9 +454,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>链表</tag>
+      
+      <tag>C++</tag>
       
       <tag>排序</tag>
       
@@ -423,9 +487,9 @@
       
       <tag>PAT</tag>
       
-      <tag>C++</tag>
-      
       <tag>链表</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
@@ -483,9 +547,9 @@
       
       <tag>bfs</tag>
       
-      <tag>图</tag>
-      
       <tag>dfs</tag>
+      
+      <tag>图</tag>
       
       <tag>union-find</tag>
       
@@ -547,9 +611,9 @@
       
       <tag>leetcode</tag>
       
-      <tag>图</tag>
-      
       <tag>dfs</tag>
+      
+      <tag>图</tag>
       
       <tag>union-find</tag>
       
