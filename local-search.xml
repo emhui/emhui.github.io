@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>1013 Battle Over Cities</title>
+    <link href="/2021/01/16/1013-Battle-Over-Cities/"/>
+    <url>/2021/01/16/1013-Battle-Over-Cities/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1013-Battle-Over-Cities"><a href="#1013-Battle-Over-Cities" class="headerlink" title="1013 Battle Over Cities"></a>1013 Battle Over Cities</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/CLjpGz.png" alt="CLjpGz"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题意思就是在一个连通图中，删去一个结点，需要添加多少边使得图重新连通起来。</p><p>用下图来举例</p><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/5mOVVl.png" alt="5mOVVl"></p><p>在当前连通图中，若把$3$给删除了，存在4个连通分量。而只需要添加$4-2=2$条线将其重新连通。</p><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/lye84M.png" alt="lye84M"></p><p>在该图中，把结点$1$删除后，剩下三个连通分量。而只需要添加$3-2=1$条线即可重新连通。</p><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/9nbLnk.png" alt="9nbLnk"></p><p>因此需要添加的线的数量为<strong>删除该结点后的新的连通图连通分量-2</strong>。</p><p>所以我们每次查询的时候，都需要重新建立连通分量。</p><p>实现步骤</p><ol><li>设置一个<code>cityMap</code>对象存储连通的路线。</li><li>写一个<code>UnionFind</code>类，每次查询重新创建一个该类对象，并且计算连通分量。</li><li>当遇到查询点的时候，不将其进行连接。</li></ol><p>⚠️</p><ul><li>城市的编号是$1 \sim N$，所以<code>UnionFind</code>的<code>n</code>初始值为<code>n+1</code></li><li>在PAT中，一直有一个<code>段错误</code>无法通过,在牛客网中则可以通过。</li></ul><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// 记录输入的值，每次重建并查集,同时计算连通分量，连通分量-2就是需要链接的数量。</span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1010</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UnionFind</span> &#123;</span><br>    <span class="hljs-keyword">private</span>:<br>    <span class="hljs-keyword">int</span> count;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; parent;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; sz;<br>    <span class="hljs-keyword">public</span>:<br>    UnionFind(<span class="hljs-keyword">int</span> n) &#123;<br>        count = n;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            parent.push_back(i);<br>            sz.push_back(<span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (x != parent[x]) &#123; <span class="hljs-comment">// 路径压缩</span><br>            parent[x] = find(parent[x]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> parent[x];<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">quick_union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> vR = find(v), wR = find(w);<br>        <span class="hljs-keyword">if</span> (vR == wR ) <span class="hljs-keyword">return</span>;<br>        <span class="hljs-keyword">if</span> (sz[vR] &gt; sz[wR]) &#123;<br>            parent[wR] = vR;<br>            sz[vR] += sz[wR];<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            parent[vR] = wR;<br>            sz[wR] += sz[vR];<br>        &#125;<br>        count--;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getCount</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> count;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">connected</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span></span>&#123;<br>        <span class="hljs-keyword">return</span> find(v) == find(w);<br>    &#125;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> n, m, k;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; cityMap[maxn];<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d%d&quot;</span>, &amp;n, &amp;m, &amp;k);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>        <span class="hljs-keyword">int</span> v, w;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;v, &amp;w); <span class="hljs-comment">// 输入两条边</span><br>        cityMap[i].push_back(v);<br>        cityMap[i].push_back(w);<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; k; i++) &#123; <span class="hljs-comment">// 开始查询</span><br>        <span class="hljs-keyword">int</span> cityID;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;cityID);<br>        <span class="hljs-function">UnionFind <span class="hljs-title">uf</span><span class="hljs-params">(n + <span class="hljs-number">1</span>)</span></span>; <span class="hljs-comment">// 城市编号是1-n，所以需要传入n+1</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; m; j++) &#123; <span class="hljs-comment">// 每次重建并查集，重新计算连通分量。</span><br>            <span class="hljs-keyword">int</span> v = cityMap[j][<span class="hljs-number">0</span>], w = cityMap[j][<span class="hljs-number">1</span>];<br>            <span class="hljs-keyword">if</span> (v == cityID || w == cityID) <span class="hljs-keyword">continue</span>;<br>            <span class="hljs-keyword">if</span> (!uf.connected(v,w)) &#123;uf.quick_union(v,w);&#125;<br>        &#125;<br>        <span class="hljs-keyword">int</span> ans = uf.getCount() - <span class="hljs-number">3</span> &gt; <span class="hljs-number">0</span> ? uf.getCount() - <span class="hljs-number">3</span>: <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, ans); <span class="hljs-comment">// 减去被删除的连通分量，0位置的连通分量，需要修复的一个分量。</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>本代码在PAT中有一个段错误，把代码复制到牛客网中，有一个用例无法通过。牛客网可以看到该测试用例</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">1 0 1<br>1<br></code></pre></td></tr></table></figure><p>这里只需要在程序最后加一个判断就可以通过牛客网的用例。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">int</span> ans = uf.getCount() - <span class="hljs-number">3</span> &gt; <span class="hljs-number">0</span> ? uf.getCount() - <span class="hljs-number">3</span>: <span class="hljs-number">0</span>;<br></code></pre></td></tr></table></figure><p>但是PAT中的<code>段错误</code>的用例是什么还不知道。。。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>union-find</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1053 Path of Equal Weight</title>
     <link href="/2021/01/16/1053-Path-of-Equal-Weight/"/>
     <url>/2021/01/16/1053-Path-of-Equal-Weight/</url>
@@ -20,9 +49,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>树</tag>
       
@@ -80,9 +109,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>bfs</tag>
       
@@ -111,9 +140,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>bfs</tag>
       
@@ -142,9 +171,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>bfs</tag>
       
@@ -175,9 +204,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>二叉树</tag>
       
@@ -204,9 +233,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>中序遍历</tag>
       
@@ -266,9 +295,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>bfs</tag>
       
@@ -332,9 +361,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>bfs</tag>
       
@@ -365,11 +394,11 @@
       
       <tag>算法</tag>
       
+      <tag>union-find</tag>
+      
       <tag>leetcode</tag>
       
       <tag>图</tag>
-      
-      <tag>union-find</tag>
       
     </tags>
     
@@ -421,9 +450,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>dfs</tag>
       
@@ -450,9 +479,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>链表</tag>
       
@@ -481,11 +510,11 @@
     
     <tags>
       
+      <tag>union-find</tag>
+      
       <tag>leetcode</tag>
       
       <tag>图</tag>
-      
-      <tag>union-find</tag>
       
     </tags>
     
@@ -510,9 +539,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>链表</tag>
       
@@ -543,9 +572,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>链表</tag>
       
@@ -574,9 +603,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>链表</tag>
       
@@ -605,13 +634,13 @@
       
       <tag>算法</tag>
       
+      <tag>union-find</tag>
+      
       <tag>bfs</tag>
       
       <tag>dfs</tag>
       
       <tag>图</tag>
-      
-      <tag>union-find</tag>
       
     </tags>
     
@@ -636,9 +665,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>栈</tag>
       
@@ -667,6 +696,8 @@
       
       <tag>算法</tag>
       
+      <tag>union-find</tag>
+      
       <tag>bfs</tag>
       
       <tag>leetcode</tag>
@@ -674,8 +705,6 @@
       <tag>dfs</tag>
       
       <tag>图</tag>
-      
-      <tag>union-find</tag>
       
       <tag>无向图</tag>
       
@@ -704,9 +733,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -733,9 +762,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -762,9 +791,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
