@@ -4,6 +4,39 @@
   
   
   <entry>
+    <title>1003 Emergency</title>
+    <link href="/2021/01/17/1003-Emergency/"/>
+    <url>/2021/01/17/1003-Emergency/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1003-Emergency"><a href="#1003-Emergency" class="headerlink" title="1003 Emergency"></a>1003 Emergency</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/ugQwkH.png" alt="ugQwkH"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题主要是找出<strong>给出一个带有点和边的权值无向图，求出两点之间最短路径的数量和到达最短路径的最大点权值</strong></p><p>本题主要求</p><ul><li>给定两点之间的<strong>最短距离数量</strong></li><li>在满足<strong>最短距离</strong>下的<strong>最大点权值和</strong></li></ul><p>因此设置两个数组分别记录<strong>最短距离数量</strong>，<strong>最大点权值和</strong></p><ul><li><code>path</code></li><li><code>w</code></li></ul><p>找最短距离可以使用<code>Dijkstra</code>算法，在该算法的优化更新过程中对<code>path,w</code>进行优化,代码如下</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> v = <span class="hljs-number">0</span>; v &lt; n; v++) &#123; <span class="hljs-comment">// 开始进行优化u-v和s-v的最短距离。</span><br><span class="hljs-keyword">if</span> (visited[v] == <span class="hljs-literal">false</span> &amp;&amp; G[u][v] != INF) &#123;<br><span class="hljs-comment">// 判断最短路径</span><br><span class="hljs-keyword">if</span> (d[u] + G[u][v] &lt; d[v]) &#123; <span class="hljs-comment">// 如果存在还要短的路径，进行优化更新</span><br>d[v] = d[u] + G[u][v];<br>w[v] = w[u] + pw[v]; <span class="hljs-comment">// 同时更新该点权值</span><br>path[v] = path[u];<span class="hljs-comment">// 更新路径数量,不存在多条一样的最短路径</span><br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (d[u] + G[u][v] == d[v])&#123; <span class="hljs-comment">// 出现长度相同的路径</span><br>path[v] += path[u];<br><span class="hljs-keyword">if</span> (w[u] + pw[v] &gt; w[v]) &#123; <span class="hljs-comment">// 若这条路径的点权值大，则进行更新。</span><br>w[v] = w[u] + pw[v];<br>&#125;<br>&#125;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">510</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">100000000</span>;<br><br><span class="hljs-keyword">int</span> n, m, c1, c2, G[maxn][maxn];<br><span class="hljs-keyword">int</span> d[maxn], pw[maxn], path[maxn], w[maxn]; <span class="hljs-comment">// d 路径, w 点权重, path 路径数量</span><br><span class="hljs-keyword">bool</span> visited[maxn] = &#123;<span class="hljs-literal">false</span>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dijkstra</span><span class="hljs-params">(<span class="hljs-keyword">int</span> start)</span> </span>&#123;<br>    <span class="hljs-comment">// 1. 查询前的初始化操作</span><br>    fill(d, d + maxn, INF); <span class="hljs-comment">// 初始化所有距离为INF</span><br>    <span class="hljs-built_in">memset</span>(path, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(path)); <span class="hljs-comment">// 初始化所有的路径为0</span><br>    <span class="hljs-built_in">memset</span>(w, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(w)); <span class="hljs-comment">// 初始化点权重为0</span><br>    path[start] = <span class="hljs-number">1</span>; <span class="hljs-comment">// 自己到自己有一个路</span><br>    d[start] = <span class="hljs-number">0</span>; <span class="hljs-comment">// 自己到自己的距离为0</span><br>    w[start] = pw[start]; <span class="hljs-comment">// 默认点的权重是自己</span><br>    <span class="hljs-comment">// 2. 开始找start到各个点的距离</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-comment">// 2.1 找到最短距离。</span><br>        <span class="hljs-keyword">int</span> u = <span class="hljs-number">-1</span>, MIN = INF; <span class="hljs-comment">// 找到最近的那个点，开始遍历。</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>            <span class="hljs-keyword">if</span> (visited[j] == <span class="hljs-literal">false</span> &amp;&amp; d[j] &lt; MIN) &#123;<br>                u = j;<br>                MIN = d[j];<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (u == <span class="hljs-number">-1</span>) <span class="hljs-keyword">return</span>;<br>        visited[u] = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 访问u</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> v = <span class="hljs-number">0</span>; v &lt; n; v++) &#123; <span class="hljs-comment">// 开始进行优化u-v和s-v的最短距离。</span><br>            <span class="hljs-keyword">if</span> (visited[v] == <span class="hljs-literal">false</span> &amp;&amp; G[u][v] != INF) &#123;<br>                <span class="hljs-comment">// 判断最短路径</span><br>                <span class="hljs-keyword">if</span> (d[u] + G[u][v] &lt; d[v]) &#123; <span class="hljs-comment">// 如果存在还要短的路径，进行优化更新</span><br>                    d[v] = d[u] + G[u][v];<br>                    w[v] = w[u] + pw[v]; <span class="hljs-comment">// 同时计算该点权值</span><br>                    path[v] = path[u];<span class="hljs-comment">// 更新路径数量</span><br>                &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (d[u] + G[u][v] == d[v])&#123; <span class="hljs-comment">// 出现长度相同的路径</span><br>                    path[v] += path[u];<br>                    <span class="hljs-keyword">if</span> (w[u] + pw[v] &gt; w[v]) &#123; <span class="hljs-comment">// 若这条路径的点权值大，则进行更新。</span><br>                        w[v] = w[u] + pw[v];<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d%d%d&quot;</span>, &amp;n, &amp;m, &amp;c1, &amp;c2);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123; <span class="hljs-comment">// 点权，每个城市的救护车数量</span><br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;pw[i]);<br>    &#125;<br>    <span class="hljs-keyword">int</span> v1, v2, dis;<br>    fill(G[<span class="hljs-number">0</span>], G[<span class="hljs-number">0</span>] + maxn * maxn, INF); <span class="hljs-comment">// fill(首地址，尾地址，填充值);</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; i++) &#123; <span class="hljs-comment">// 连通图</span><br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d%d&quot;</span>, &amp;v1, &amp;v2, &amp;dis);<br>        G[v1][v2] = dis;<br>        G[v2][v1] = dis;<br>    &#125;<br>    Dijkstra(c1);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d %d\n&quot;</span>, path[c2], w[c2]);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul><li><code>C++</code>中<code>memset</code>和<code>fill</code>区别</li></ul><p><code>memset</code>在<code>string.h</code>头文件中。<code>memset</code>只能填充字节，一般填充0或-1.填充其他数不适合。所以在使用初始化<code>bool</code>数组的可以使用。</p><p><code>memset(数组,填充数据0/-1,数组大小)</code></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">memset</span>(visited, <span class="hljs-literal">false</span>, <span class="hljs-keyword">sizeof</span>(visited));<br></code></pre></td></tr></table></figure><p><code>fill</code>在<code>algorithm</code>中，它可以填充任何值。使用方法<code>fill(首地址, 为地址,填充数据)</code>。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++">fill(G[<span class="hljs-number">0</span>], G[<span class="hljs-number">0</span>] + maxn * maxn, INF); <span class="hljs-comment">// fill(首地址，尾地址，填充值);</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>图</tag>
+      
+      <tag>Dijkstra</tag>
+      
+      <tag>最短距离</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1021 Deepest Root</title>
     <link href="/2021/01/17/1021-Deepest-Root/"/>
     <url>/2021/01/17/1021-Deepest-Root/</url>
@@ -20,17 +53,17 @@
     
     <tags>
       
+      <tag>PAT</tag>
+      
       <tag>算法</tag>
       
-      <tag>PAT</tag>
+      <tag>union-find</tag>
       
       <tag>图</tag>
       
       <tag>树</tag>
       
       <tag>dfs</tag>
-      
-      <tag>union-find</tag>
       
     </tags>
     
@@ -55,9 +88,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>union-find</tag>
       
@@ -84,9 +117,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>树</tag>
       
@@ -144,13 +177,13 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
       
-      <tag>bfs</tag>
+      <tag>算法</tag>
       
       <tag>树</tag>
+      
+      <tag>bfs</tag>
       
     </tags>
     
@@ -175,13 +208,13 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
       
-      <tag>bfs</tag>
+      <tag>算法</tag>
       
       <tag>图</tag>
+      
+      <tag>bfs</tag>
       
     </tags>
     
@@ -206,15 +239,15 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
       
-      <tag>bfs</tag>
+      <tag>算法</tag>
       
       <tag>树</tag>
       
       <tag>dfs</tag>
+      
+      <tag>bfs</tag>
       
     </tags>
     
@@ -239,9 +272,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>二叉树</tag>
       
@@ -268,9 +301,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>中序遍历</tag>
       
@@ -330,9 +363,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>bfs</tag>
       
@@ -396,13 +429,13 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
       
-      <tag>bfs</tag>
+      <tag>算法</tag>
       
       <tag>图</tag>
+      
+      <tag>bfs</tag>
       
     </tags>
     
@@ -429,9 +462,9 @@
       
       <tag>算法</tag>
       
-      <tag>图</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>图</tag>
       
       <tag>leetcode</tag>
       
@@ -485,9 +518,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>dfs</tag>
       
@@ -514,9 +547,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>链表</tag>
       
@@ -545,9 +578,9 @@
     
     <tags>
       
-      <tag>图</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>图</tag>
       
       <tag>leetcode</tag>
       
@@ -574,9 +607,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>链表</tag>
       
@@ -607,9 +640,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>链表</tag>
       
@@ -638,9 +671,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>链表</tag>
       
@@ -669,13 +702,13 @@
       
       <tag>算法</tag>
       
-      <tag>bfs</tag>
+      <tag>union-find</tag>
       
       <tag>图</tag>
       
       <tag>dfs</tag>
       
-      <tag>union-find</tag>
+      <tag>bfs</tag>
       
     </tags>
     
@@ -700,9 +733,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>栈</tag>
       
@@ -731,13 +764,13 @@
       
       <tag>算法</tag>
       
-      <tag>bfs</tag>
+      <tag>union-find</tag>
       
       <tag>图</tag>
       
       <tag>dfs</tag>
       
-      <tag>union-find</tag>
+      <tag>bfs</tag>
       
       <tag>leetcode</tag>
       
@@ -768,9 +801,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -797,9 +830,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -826,9 +859,9 @@
     
     <tags>
       
-      <tag>算法</tag>
-      
       <tag>PAT</tag>
+      
+      <tag>算法</tag>
       
       <tag>C++</tag>
       
@@ -857,9 +890,9 @@
     
     <tags>
       
-      <tag>ArcGIS For JS</tag>
-      
       <tag>JavaScript</tag>
+      
+      <tag>ArcGIS For JS</tag>
       
     </tags>
     
@@ -884,9 +917,9 @@
     
     <tags>
       
-      <tag>JavaScript</tag>
-      
       <tag>Cesium</tag>
+      
+      <tag>JavaScript</tag>
       
       <tag>铁路</tag>
       
