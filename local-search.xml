@@ -4,6 +4,41 @@
   
   
   <entry>
+    <title>1021 Deepest Root</title>
+    <link href="/2021/01/17/1021-Deepest-Root/"/>
+    <url>/2021/01/17/1021-Deepest-Root/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1021-Deepest-Root"><a href="#1021-Deepest-Root" class="headerlink" title="1021 Deepest Root"></a>1021 Deepest Root</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/8yP8rz.png" alt="8yP8rz"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题主要是求<strong>一个图转化为树，从图中每个顶点出发到根结点的最大深度。若图存在多个连通分量，则直接输出连通分量个数。若存在多个最大深度相同的根结点，则升序输出这些根结点</strong>。</p><p>步骤</p><ol><li>在输入的使用使用并查集,输入完成后就可以统计连通分量个个数。若连通分量个数大于1直接输出。</li><li>若整个图是连通的，则使用<code>BFS</code>将每个结点做根结点进行遍历。用一个数组<code>ans[maxn]</code>统计每个结点作为根结点时候的最大深度。再使用<code>maxHight</code>变量设置为整个图的最大深度。</li><li>最后使用遍历<code>ans[maxn]</code>便可以按升序输出最大深度的根结点。</li></ol><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;queue&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10010</span>;<br><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; graphic[maxn];<br><span class="hljs-keyword">bool</span> visited[maxn] = &#123;<span class="hljs-literal">false</span>&#125;;<br><span class="hljs-keyword">int</span> ans[maxn] = &#123;<span class="hljs-number">0</span>&#125;; <span class="hljs-comment">// 记录每个结点的连通分量</span><br><span class="hljs-keyword">int</span> highest = <span class="hljs-number">-1</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dfs</span><span class="hljs-params">(<span class="hljs-keyword">int</span> root, <span class="hljs-keyword">int</span> depth)</span> </span>&#123;<br>    visited[root] = <span class="hljs-literal">true</span>;<br>    highest = highest &gt; depth ? highest: depth;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; graphic[root].size(); i++) &#123;<br>        <span class="hljs-keyword">if</span> (visited[graphic[root][i]] == <span class="hljs-literal">false</span>) &#123;<br>            dfs(graphic[root][i], depth + <span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">initVisited</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        visited[i] = <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 判断是否有多个连通分量。这个函数无法统计连通分量，只能判断连通分量是否超过一个</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">countConnected</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> count = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        <span class="hljs-keyword">if</span> (!visited[i]) &#123;<br>            count++;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> count;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UnionFind</span> &#123;</span><br>    <span class="hljs-keyword">private</span>:<br>    <span class="hljs-keyword">int</span> count;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; parent;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; sz;<br>    <span class="hljs-keyword">public</span>:<br>    UnionFind(<span class="hljs-keyword">int</span> n) &#123;<br>        count = n;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            parent.push_back(i);<br>            sz.push_back(<span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (x != parent[x]) &#123; <span class="hljs-comment">// 路径压缩</span><br>            parent[x] = find(parent[x]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> parent[x];<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">quick_union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> vR = find(v), wR = find(w);<br>        <span class="hljs-keyword">if</span> (vR == wR ) <span class="hljs-keyword">return</span>;<br>        <span class="hljs-keyword">if</span> (sz[vR] &gt; sz[wR]) &#123;<br>            parent[wR] = vR;<br>            sz[vR] += sz[wR];<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            parent[vR] = wR;<br>            sz[wR] += sz[vR];<br>        &#125;<br>        count--;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getCount</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> count;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">connected</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span></span>&#123;<br>        <span class="hljs-keyword">return</span> find(v) == find(w);<br>    &#125;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> n, v, w;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n);<br>    <span class="hljs-function">UnionFind <span class="hljs-title">uf</span><span class="hljs-params">(n+<span class="hljs-number">1</span>)</span></span>; <span class="hljs-comment">// id是1~n</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n - <span class="hljs-number">1</span>; i++) &#123; <span class="hljs-comment">// n-1条边</span><br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;v, &amp;w);<br>        graphic[v].push_back(w);<br>        graphic[w].push_back(v);<br>        uf.quick_union(v,w);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (uf.getCount() &gt; <span class="hljs-number">2</span>) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Error: %d components\n&quot;</span>, uf.getCount() - <span class="hljs-number">1</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>, maxHight = <span class="hljs-number">-1</span>; <span class="hljs-comment">// 开始对每个点进行遍历，并且记录每个点的最大深度。</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            initVisited(n);<br>            highest = <span class="hljs-number">-1</span>;<br>            dfs(i, <span class="hljs-number">0</span>);<br>            ans[i] = highest;<br>            maxHight = maxHight &gt; highest ? maxHight : highest;<br>            count = countConnected(n);<br>            <span class="hljs-keyword">if</span> (count &gt; <span class="hljs-number">1</span>) &#123;<span class="hljs-keyword">break</span>;&#125;<br>        &#125;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++)&#123;<br>            <span class="hljs-keyword">if</span> (maxHight == ans[i]) &#123;<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, i);&#125;;<br>        &#125; <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>PAT</tag>
+      
+      <tag>图</tag>
+      
+      <tag>树</tag>
+      
+      <tag>dfs</tag>
+      
+      <tag>union-find</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1013 Battle Over Cities</title>
     <link href="/2021/01/16/1013-Battle-Over-Cities/"/>
     <url>/2021/01/16/1013-Battle-Over-Cities/</url>
@@ -20,9 +55,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>union-find</tag>
       
@@ -49,9 +84,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>树</tag>
       
@@ -109,9 +144,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>bfs</tag>
       
@@ -140,9 +175,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>bfs</tag>
       
@@ -171,9 +206,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>bfs</tag>
       
@@ -204,9 +239,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>二叉树</tag>
       
@@ -233,9 +268,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>中序遍历</tag>
       
@@ -295,9 +330,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>bfs</tag>
       
@@ -361,9 +396,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>bfs</tag>
       
@@ -394,11 +429,11 @@
       
       <tag>算法</tag>
       
+      <tag>图</tag>
+      
       <tag>union-find</tag>
       
       <tag>leetcode</tag>
-      
-      <tag>图</tag>
       
     </tags>
     
@@ -450,9 +485,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>dfs</tag>
       
@@ -479,9 +514,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>链表</tag>
       
@@ -510,11 +545,11 @@
     
     <tags>
       
+      <tag>图</tag>
+      
       <tag>union-find</tag>
       
       <tag>leetcode</tag>
-      
-      <tag>图</tag>
       
     </tags>
     
@@ -539,9 +574,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>链表</tag>
       
@@ -572,9 +607,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>链表</tag>
       
@@ -603,9 +638,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>链表</tag>
       
@@ -634,13 +669,13 @@
       
       <tag>算法</tag>
       
-      <tag>union-find</tag>
-      
       <tag>bfs</tag>
+      
+      <tag>图</tag>
       
       <tag>dfs</tag>
       
-      <tag>图</tag>
+      <tag>union-find</tag>
       
     </tags>
     
@@ -665,9 +700,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>栈</tag>
       
@@ -696,15 +731,15 @@
       
       <tag>算法</tag>
       
-      <tag>union-find</tag>
-      
       <tag>bfs</tag>
       
-      <tag>leetcode</tag>
+      <tag>图</tag>
       
       <tag>dfs</tag>
       
-      <tag>图</tag>
+      <tag>union-find</tag>
+      
+      <tag>leetcode</tag>
       
       <tag>无向图</tag>
       
@@ -733,9 +768,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>C++</tag>
       
@@ -762,9 +797,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>C++</tag>
       
@@ -791,9 +826,9 @@
     
     <tags>
       
-      <tag>PAT</tag>
-      
       <tag>算法</tag>
+      
+      <tag>PAT</tag>
       
       <tag>C++</tag>
       
