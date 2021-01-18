@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>账户合并</title>
+    <link href="/2021/01/18/%E8%B4%A6%E6%88%B7%E5%90%88%E5%B9%B6/"/>
+    <url>/2021/01/18/%E8%B4%A6%E6%88%B7%E5%90%88%E5%B9%B6/</url>
+    
+    <content type="html"><![CDATA[<h1 id="账户合并"><a href="#账户合并" class="headerlink" title="账户合并"></a><a href="https://leetcode-cn.com/problems/accounts-merge/">账户合并</a></h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/Ssq91V.png" alt="Ssq91V"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题需要找到邮箱之间的连通性，若邮箱之间连通，那么就确定了该邮箱所属的人。可以采用并查集来实现。设置两个哈希表。建立<strong>email-&gt;idx</strong>，<strong>email-&gt;name</strong>。</p><p>映射方法如下</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-keyword">int</span>&gt; email2idx;<br><span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>,<span class="hljs-built_in">string</span>&gt; email2name;<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; accounts.size(); i++) &#123;<br><span class="hljs-built_in">string</span> name = accounts[i][<span class="hljs-number">0</span>];<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt; accounts[i].size(); j++) &#123;<br><span class="hljs-keyword">if</span> (email2idx.find(accounts[i][j]) == email2idx.end()) &#123;<br>email2idx[accounts[i][j]] = email2idx.size();<br>email2name[accounts[i][j]] = name;<br>&#125;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>接着使用并查集，将属于同一连通分量的email连通。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function">UnionFind <span class="hljs-title">uf</span><span class="hljs-params">(email2idx.size())</span></span>; <span class="hljs-comment">// 初始化</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; accounts.size(); i++) &#123;<br><span class="hljs-built_in">string</span> first = accounts[i][<span class="hljs-number">1</span>]; <span class="hljs-comment">// 每一组account对象中，各个邮箱都是连通的，因此只要选择一个来和其他连通就可以。</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">2</span>; j &lt; accounts[i].size(); j++) &#123;<br>uf.quick_union(email2idx[first], email2idx[accounts[i][j]]); <span class="hljs-comment">// 合并同一个集合</span><br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>合并好连通分量后，开始将同一个连通分量下的email集合到一起</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C+">&#x2F;&#x2F; 将同一连通分量下的集合添加到一起<br>map&lt;int, vector&lt;string&gt;&gt; idx2emails;<br>for (map&lt;string, int&gt;::iterator it &#x3D; email2idx.begin(); it !&#x3D; email2idx.end(); it++) &#123;<br>idx2emails[uf.find(it-&gt;second)].push_back(it-&gt;first);<br>&#125;<br></code></pre></td></tr></table></figure><p>最后按照题目返回对应格式数据即可。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UnionFind</span> &#123;</span><br>    <span class="hljs-keyword">private</span>:<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; parent;<br>    <span class="hljs-keyword">public</span>:<br>    UnionFind(<span class="hljs-keyword">int</span> n) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) parent.push_back(i);<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (x != parent[x]) &#123;<br>            parent[x] = find(parent[x]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> parent[x];<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">quick_union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span> </span>&#123;<br>        parent[find(v)] = find(w);<br>    &#125;<br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;&gt; <span class="hljs-title">accountsMerge</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;&gt;&amp; accounts)</span> </span>&#123;<br>        <span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-keyword">int</span>&gt; email2idx;<br>        <span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>,<span class="hljs-built_in">string</span>&gt; email2name;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; accounts.size(); i++) &#123;<br>            <span class="hljs-built_in">string</span> name = accounts[i][<span class="hljs-number">0</span>];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt; accounts[i].size(); j++) &#123;<br>                <span class="hljs-keyword">if</span> (email2idx.find(accounts[i][j]) == email2idx.end()) &#123;<br>                    email2idx[accounts[i][j]] = email2idx.size();<br>                    email2name[accounts[i][j]] = name;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-function">UnionFind <span class="hljs-title">uf</span><span class="hljs-params">(email2idx.size())</span></span>; <span class="hljs-comment">// 初始化</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; accounts.size(); i++) &#123;<br>            <span class="hljs-built_in">string</span> first = accounts[i][<span class="hljs-number">1</span>];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">2</span>; j &lt; accounts[i].size(); j++) &#123;<br>                uf.quick_union(email2idx[first], email2idx[accounts[i][j]]); <span class="hljs-comment">// 合并同一个集合</span><br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 将同一连通分量下的集合添加到一起</span><br>        <span class="hljs-built_in">map</span>&lt;<span class="hljs-keyword">int</span>, <span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;&gt; idx2emails;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-keyword">int</span>&gt;::iterator it = email2idx.begin(); it != email2idx.end(); it++) &#123;<br>            <span class="hljs-comment">// cout &lt;&lt; it-&gt;first &lt;&lt; &quot; &quot; &lt;&lt; uf.find(it-&gt;second) &lt;&lt;endl;</span><br>            idx2emails[uf.find(it-&gt;second)].push_back(it-&gt;first);<br>        &#125;<br>        <span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;&gt; ans;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">map</span>&lt;<span class="hljs-keyword">int</span>, <span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;&gt;::iterator it = idx2emails.begin(); it != idx2emails.end(); it++) &#123;<br>            <span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt; temp;<br>            temp.push_back(email2name[it-&gt;second[<span class="hljs-number">0</span>]]);<br>            sort(it-&gt;second.begin(), it-&gt;second.end());<br>            temp.insert(temp.end(), it-&gt;second.begin(), it-&gt;second.end());<br>            ans.push_back(temp);<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans;<br>&#125;;<br>&#125;;<br></code></pre></td></tr></table></figure><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul><li><code>vector&lt;type&gt;</code>合并数据</li></ul><p>如下例所示，使用<code>insert(oriin.end(), in.begin(), in.end())</code></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; vec1 = &#123;...&#125;;<br><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; vec2 = &#123;...&#125;;<span class="hljs-comment">// vec1和vec2都存有内容</span><br><br><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; vec3;<span class="hljs-comment">//vec3是空的</span><br>vec3.insert(vec3.end(),vec1.begin(),vec1.end())<span class="hljs-comment">//将vec1压入</span><br>vec3.insert(vec3.end(),vec2.begin(),vec2.end())<span class="hljs-comment">//继续将vec2压入</span><br></code></pre></td></tr></table></figure><ul><li><code>vector</code>如何使用<code>sort</code></li></ul><p>基本使用：<code>sort(v.begin(), v.end())</code></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>LeetCode</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>union-find</tag>
+      
+      <tag>leetcode</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1034 Head of a Gang</title>
     <link href="/2021/01/18/1034-Head-of-a-Gang/"/>
     <url>/2021/01/18/1034-Head-of-a-Gang/</url>
@@ -735,9 +764,9 @@
       
       <tag>算法</tag>
       
-      <tag>bfs</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>bfs</tag>
       
       <tag>dfs</tag>
       
@@ -797,9 +826,9 @@
       
       <tag>算法</tag>
       
-      <tag>bfs</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>bfs</tag>
       
       <tag>dfs</tag>
       
@@ -921,9 +950,9 @@
     
     <tags>
       
-      <tag>JavaScript</tag>
-      
       <tag>ArcGIS For JS</tag>
+      
+      <tag>JavaScript</tag>
       
     </tags>
     
@@ -948,9 +977,9 @@
     
     <tags>
       
-      <tag>Cesium</tag>
-      
       <tag>JavaScript</tag>
+      
+      <tag>Cesium</tag>
       
       <tag>铁路</tag>
       
