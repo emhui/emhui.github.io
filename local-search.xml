@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>1034 Head of a Gang</title>
+    <link href="/2021/01/18/1034-Head-of-a-Gang/"/>
+    <url>/2021/01/18/1034-Head-of-a-Gang/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1034-Head-of-a-Gang"><a href="#1034-Head-of-a-Gang" class="headerlink" title="1034 Head of a Gang"></a>1034 Head of a Gang</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/oAOiuF.png" alt="oAOiuF"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>略.</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;map&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">2001</span>;<br><span class="hljs-keyword">int</span> numPersion = <span class="hljs-number">0</span>, count = <span class="hljs-number">0</span>; <span class="hljs-comment">// count 连通分量个数</span><br><span class="hljs-keyword">int</span> parent[maxn] = &#123;<span class="hljs-number">0</span>&#125;, weight[maxn] = &#123;<span class="hljs-number">0</span>&#125;;<br><br><span class="hljs-built_in">map</span>&lt;<span class="hljs-keyword">int</span>,<span class="hljs-built_in">string</span>&gt; int2string;<br><span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>,<span class="hljs-keyword">int</span>&gt; string2num, gang;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">str2num</span><span class="hljs-params">(<span class="hljs-built_in">string</span> name)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (string2num.find(name) != string2num.end()) &#123;<br>        <span class="hljs-keyword">return</span> string2num[name];<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        string2num[name] = numPersion; <span class="hljs-comment">// str-&gt;num</span><br>        int2string[numPersion] = name; <span class="hljs-comment">// num-&gt;str</span><br>        <span class="hljs-keyword">return</span> numPersion++;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (v != parent[v]) &#123;parent[v] = find(parent[v]);&#125; <span class="hljs-comment">// 路径压缩</span><br>    <span class="hljs-keyword">return</span> parent[v];<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">quick_union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> vRoot = find(v), wRoot = find(w);<br>    <span class="hljs-keyword">if</span> (vRoot == wRoot) <span class="hljs-keyword">return</span>;<br>    <span class="hljs-keyword">if</span> (weight[vRoot] &gt; weight[wRoot]) parent[wRoot] = vRoot;<br>    <span class="hljs-keyword">else</span> parent[vRoot] = wRoot;<br>    count--;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">string</span> s1, s2;<br>    <span class="hljs-keyword">int</span> n, k, w;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; temp[maxn];<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;n, &amp;k);<br><br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-built_in">cin</span> &gt;&gt; s1 &gt;&gt; s2 &gt;&gt; w;<br>        <span class="hljs-keyword">int</span> id1 = str2num(s1), id2 = str2num(s2);<br>        weight[id1] += w;<br>        weight[id2] += w;<br>        temp[i].push_back(id1);<br>        temp[i].push_back(id2);<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; numPersion; i++) &#123;parent[i] = i;&#125;<br>    count = numPersion; <span class="hljs-comment">// 一开始连通分量个数</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-keyword">int</span> v = temp[i][<span class="hljs-number">0</span>], w = temp[i][<span class="hljs-number">1</span>];<br>        <span class="hljs-keyword">if</span> (find(v) != find(w)) &#123;<br>            quick_union(v, w);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">int</span> numGang = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; head; <span class="hljs-comment">// 记录所有的头</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; numPersion; i++) &#123;<br>        <span class="hljs-comment">// cout &lt;&lt; i &lt;&lt; &quot;:&quot; &lt;&lt;int2string[i] &lt;&lt; &quot;-&gt;&quot; &lt;&lt; int2string[parent[i]] &lt;&lt; &quot; w: &quot; &lt;&lt; weight[i] &lt;&lt; endl;</span><br>        <span class="hljs-keyword">if</span> (i == parent[i]) &#123;<br>            head.push_back(i);<br>            <span class="hljs-comment">// cout &lt;&lt; &quot;head =&gt; &quot; &lt;&lt; int2string[i] &lt;&lt;endl;</span><br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; head.size(); i++) &#123;<br>        <span class="hljs-keyword">int</span> num = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">int</span> weightGange = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; numPersion; j++) &#123;<br>            <span class="hljs-keyword">if</span> (find(j) == head[i]) &#123;<br>                weightGange += weight[j];<br>                num++;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (num &gt; <span class="hljs-number">2</span> &amp;&amp; (weightGange / <span class="hljs-number">2</span>) &gt; k)<br>        &#123;<br>            gang[int2string[head[i]]] = num;<br>            numGang++;<br>        &#125;<br>    &#125;<br>    <span class="hljs-built_in">cout</span> &lt;&lt; numGang &lt;&lt; <span class="hljs-built_in">endl</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>,<span class="hljs-keyword">int</span>&gt;::iterator it = gang.begin(); it != gang.end(); it++) &#123;<br>        <span class="hljs-built_in">cout</span> &lt;&lt; it-&gt;first &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; it-&gt;second &lt;&lt;<span class="hljs-built_in">endl</span>;<br>    &#125;<br>    <span class="hljs-comment">// cout &lt;&lt; find(4) &lt;&lt; endl;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>图</tag>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>union-find</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1003 Emergency</title>
     <link href="/2021/01/17/1003-Emergency/"/>
     <url>/2021/01/17/1003-Emergency/</url>
@@ -20,11 +51,11 @@
     
     <tags>
       
+      <tag>图</tag>
+      
       <tag>PAT</tag>
       
       <tag>算法</tag>
-      
-      <tag>图</tag>
       
       <tag>Dijkstra</tag>
       
@@ -53,13 +84,13 @@
     
     <tags>
       
+      <tag>图</tag>
+      
       <tag>PAT</tag>
       
       <tag>算法</tag>
       
       <tag>union-find</tag>
-      
-      <tag>图</tag>
       
       <tag>树</tag>
       
@@ -181,9 +212,9 @@
       
       <tag>算法</tag>
       
-      <tag>树</tag>
-      
       <tag>bfs</tag>
+      
+      <tag>树</tag>
       
     </tags>
     
@@ -208,11 +239,11 @@
     
     <tags>
       
+      <tag>图</tag>
+      
       <tag>PAT</tag>
       
       <tag>算法</tag>
-      
-      <tag>图</tag>
       
       <tag>bfs</tag>
       
@@ -243,11 +274,11 @@
       
       <tag>算法</tag>
       
+      <tag>bfs</tag>
+      
       <tag>树</tag>
       
       <tag>dfs</tag>
-      
-      <tag>bfs</tag>
       
     </tags>
     
@@ -429,11 +460,11 @@
     
     <tags>
       
+      <tag>图</tag>
+      
       <tag>PAT</tag>
       
       <tag>算法</tag>
-      
-      <tag>图</tag>
       
       <tag>bfs</tag>
       
@@ -460,11 +491,11 @@
     
     <tags>
       
+      <tag>图</tag>
+      
       <tag>算法</tag>
       
       <tag>union-find</tag>
-      
-      <tag>图</tag>
       
       <tag>leetcode</tag>
       
@@ -578,9 +609,9 @@
     
     <tags>
       
-      <tag>union-find</tag>
-      
       <tag>图</tag>
+      
+      <tag>union-find</tag>
       
       <tag>leetcode</tag>
       
@@ -700,15 +731,15 @@
     
     <tags>
       
+      <tag>图</tag>
+      
       <tag>算法</tag>
+      
+      <tag>bfs</tag>
       
       <tag>union-find</tag>
       
-      <tag>图</tag>
-      
       <tag>dfs</tag>
-      
-      <tag>bfs</tag>
       
     </tags>
     
@@ -762,15 +793,15 @@
     
     <tags>
       
+      <tag>图</tag>
+      
       <tag>算法</tag>
+      
+      <tag>bfs</tag>
       
       <tag>union-find</tag>
       
-      <tag>图</tag>
-      
       <tag>dfs</tag>
-      
-      <tag>bfs</tag>
       
       <tag>leetcode</tag>
       
