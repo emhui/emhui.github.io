@@ -4,6 +4,39 @@
   
   
   <entry>
+    <title>1584. 连接所有点的最小费用</title>
+    <link href="/2021/01/19/1584-%E8%BF%9E%E6%8E%A5%E6%89%80%E6%9C%89%E7%82%B9%E7%9A%84%E6%9C%80%E5%B0%8F%E8%B4%B9%E7%94%A8/"/>
+    <url>/2021/01/19/1584-%E8%BF%9E%E6%8E%A5%E6%89%80%E6%9C%89%E7%82%B9%E7%9A%84%E6%9C%80%E5%B0%8F%E8%B4%B9%E7%94%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1584-连接所有点的最小费用"><a href="#1584-连接所有点的最小费用" class="headerlink" title="1584. 连接所有点的最小费用"></a><a href="https://emhui.fun/2021/01/19/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/">1584. 连接所有点的最小费用</a></h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/MiReTb.png" alt="MiReTb"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题是求由这些点组成的最小生成树权值大小。可以使用<strong>Kruskal算法</strong>。</p><h3 id="Kruskal算法-lt-span-class-”hint–top-hint–rounded”-aria-label-”最小生成树"><a href="#Kruskal算法-lt-span-class-”hint–top-hint–rounded”-aria-label-”最小生成树" class="headerlink" title="Kruskal算法&lt;span class=”hint–top hint–rounded” aria-label=”最小生成树"></a>Kruskal算法<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote">&lt;span class=”hint–top hint–rounded” aria-label=”最小生成树</h3><p>“&gt;[1]</span></a></sup></p><blockquote><p>该算法细节可以参考<a href="https://emhui.fun/2021/01/19/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/">最小生成树</a></p></blockquote><p>该算法满足实现两点</p><ul><li>建立一个权值边和边两个顶点的集合。同时该集合按照边的权值由小到达排序。</li><li>从该集合中几次选出最小的边，判断该边的两个点是否已经在最小生成树中（<strong>使用并查集</strong>），若不在，则将该边加入到最小生成树中，同时连通该两点。若存在该两点，则继续寻找下一个权值最小的边。</li></ul><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="Kruskal"><a href="#Kruskal" class="headerlink" title="Kruskal"></a>Kruskal</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UnionFind</span> &#123;</span><br>    <span class="hljs-keyword">private</span>:<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; parent;<br>    <span class="hljs-keyword">public</span>:<br>    UnionFind(<span class="hljs-keyword">int</span> n) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) parent.push_back(i);<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (x != parent[x]) &#123;<br>            parent[x] = find(parent[x]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> parent[x];<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">quick_union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span> </span>&#123;<br>        parent[find(v)] = find(w);<br>    &#125;<br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">minCostConnectPoints</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&gt;&amp; points)</span> </span>&#123;<br>        <span class="hljs-comment">// 建立一个权值的对应的边</span><br>        <span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">pair</span>&lt;<span class="hljs-keyword">int</span>, <span class="hljs-built_in">pair</span>&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt;&gt;&gt; edges;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; points.size(); i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>; j &lt; points.size(); j++) &#123;<br>                <span class="hljs-keyword">int</span> cost = <span class="hljs-built_in">abs</span>(points[i][<span class="hljs-number">0</span>] - points[j][<span class="hljs-number">0</span>]) + <span class="hljs-built_in">abs</span>(points[i][<span class="hljs-number">1</span>] - points[j][<span class="hljs-number">1</span>]);<br><br>                edges.push_back(<span class="hljs-built_in">make_pair</span>(cost, <span class="hljs-built_in">make_pair</span>(i, j))); <span class="hljs-comment">// 把i,j两个点放到求加权边的目录</span><br>            &#125;<br>        &#125;<br>        sort(edges.begin(), edges.end()); <span class="hljs-comment">// 按照权边进行排序</span><br>        <span class="hljs-function">UnionFind <span class="hljs-title">uf</span><span class="hljs-params">(points.size())</span></span>;<br>        <span class="hljs-comment">// 开始检查加权边</span><br>        <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; edges.size(); i++) &#123;<br>            <span class="hljs-keyword">int</span> cost = edges[i].first;<br>            <span class="hljs-keyword">int</span> u = edges[i].second.first, v = edges[i].second.second;<br>            <span class="hljs-keyword">if</span> (uf.find(u) == uf.find(v)) <span class="hljs-keyword">continue</span>;<br>            uf.quick_union(u, v);<br>            sum += cost;<br>        &#125;<br>        <span class="hljs-keyword">return</span> sum;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure><section class="footnotes"><h2>参考</h2><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="https://emhui.fun/2021/01/19/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/">最小生成树</a><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
+    
+    
+    <categories>
+      
+      <category>LeetCode</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>图</tag>
+      
+      <tag>leetcode</tag>
+      
+      <tag>最小生成树</tag>
+      
+      <tag>Kruskal</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>最小生成树</title>
     <link href="/2021/01/19/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/"/>
     <url>/2021/01/19/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/</url>
@@ -853,9 +886,9 @@
       
       <tag>图</tag>
       
-      <tag>bfs</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>bfs</tag>
       
       <tag>dfs</tag>
       
@@ -915,9 +948,9 @@
       
       <tag>图</tag>
       
-      <tag>bfs</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>bfs</tag>
       
       <tag>dfs</tag>
       
