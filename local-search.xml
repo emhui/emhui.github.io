@@ -4,6 +4,39 @@
   
   
   <entry>
+    <title>1489. 找到最小生成树里的关键边和伪关键边</title>
+    <link href="/2021/01/21/1489-%E6%89%BE%E5%88%B0%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%87%8C%E7%9A%84%E5%85%B3%E9%94%AE%E8%BE%B9%E5%92%8C%E4%BC%AA%E5%85%B3%E9%94%AE%E8%BE%B9/"/>
+    <url>/2021/01/21/1489-%E6%89%BE%E5%88%B0%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%87%8C%E7%9A%84%E5%85%B3%E9%94%AE%E8%BE%B9%E5%92%8C%E4%BC%AA%E5%85%B3%E9%94%AE%E8%BE%B9/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1489-找到最小生成树里的关键边和伪关键边"><a href="#1489-找到最小生成树里的关键边和伪关键边" class="headerlink" title="1489. 找到最小生成树里的关键边和伪关键边"></a><a href="https://leetcode-cn.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/">1489. 找到最小生成树里的关键边和伪关键边</a></h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/Yu4UTc.png" alt="Yu4UTc"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题参考<a href="https://leetcode-cn.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/solution/zhao-dao-zui-xiao-sheng-cheng-shu-li-de-gu57q/">官方解答</a>，用简单的话来理解什么是关键边和伪关键边。</p><ul><li><strong>关键边</strong>: 当图中删除这条边的时候，无法形成最小生成树或是权值大于最小生成树的权值。所以<strong>删除这条边了影响生成最佳的最小生成树</strong></li><li><strong>伪关键边</strong>: 该边只出现在部分最小生成树中，不会出现在所有最小生成树中。</li></ul><p>根据上面可以得到，若改边是<strong>关键边</strong>，则就不需要判断它是不是<strong>伪关键边</strong>了，因为<strong>关键边</strong>一定出现在每个最小生成树中。所以可以对一条边先进行判断是否是关键边，若是，则不需要判断是伪关键边。若不是则需要判断是不是伪关键边。</p><p>步骤</p><ol><li>先使用<code>Kruskal</code>+<code>UnionFind</code>计算出最小生成树的权值<code>minWeight</code>.</li><li>在对每条边依次判断。</li><li>关键边，在并查集中不加入边，判断改变是否对最小生成树和权值有影响。</li></ol><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">if</span> (i != j &amp;&amp; (uf.find(u) != uf.find(v)))<br></code></pre></td></tr></table></figure><ol start="4"><li>伪关键边，在判断完不是关键边后，把这条边作为第一条连接的边加入并查集中，然后去继续判断生成的树权值是否和<code>minWeight</code>相等，若相等，则证明该边在当前生成树中是有效的边，加入到伪关键边中。</li></ol><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UnionFind</span> &#123;</span><br>    <span class="hljs-keyword">private</span>:<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; parent;<br>    <span class="hljs-keyword">int</span> num;<br>    <span class="hljs-keyword">public</span>:<br>    UnionFind(<span class="hljs-keyword">int</span> n) &#123;<br>        num = n;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) parent.push_back(i);<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (x != parent[x]) &#123;<br>            parent[x] = find(parent[x]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> parent[x];<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">quick_union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> vRoot = find(v), wRoot = find(w);<br>        <span class="hljs-keyword">if</span> (vRoot == wRoot) <span class="hljs-keyword">return</span>;<br>        parent[find(v)] = find(w);<br>        num--;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getCount</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-comment">// 获取连通分量个数</span><br>        <span class="hljs-keyword">return</span> num;<br>    &#125;<br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&gt; <span class="hljs-title">findCriticalAndPseudoCriticalEdges</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n, <span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&gt;&amp; edges)</span> </span>&#123;<br>        <span class="hljs-comment">// 使用官方的思路</span><br>        <span class="hljs-comment">// 1. 先求出最小生成树的权值</span><br>        <span class="hljs-comment">// 2. 关键边，依次对每条边判断，若该边不存在，是否影响到权值</span><br>        <span class="hljs-comment">// 3. 非关键边，优先连接该边，若value相同，则证明该边不影响最终结果</span><br><br>        <span class="hljs-comment">// 0. 记录关键边的下标，因为题目要求返回的下标，等会按权值排序会打乱下标</span><br>        <span class="hljs-keyword">int</span> size = edges.size();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;edges[i].push_back(i);&#125;<br><br>        <span class="hljs-comment">// 1.1 对权边排序</span><br>        sort(edges.begin(), edges.end(), [](<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; a,<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; b) &#123;<br>            <span class="hljs-keyword">return</span> a[<span class="hljs-number">2</span>] &lt; b[<span class="hljs-number">2</span>];<br>        &#125;);<br>        <span class="hljs-comment">// 1.2 依次对权值最小边进行合并,并求出最小权值和</span><br>        <span class="hljs-function">UnionFind <span class="hljs-title">uf</span><span class="hljs-params">(n)</span></span>;<br>        <span class="hljs-keyword">int</span> minWeight = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>            <span class="hljs-keyword">int</span> u = edges[i][<span class="hljs-number">0</span>], v = edges[i][<span class="hljs-number">1</span>];<br>            <span class="hljs-keyword">if</span> (uf.find(u) != uf.find(v)) &#123;<br>                uf.quick_union(u, v);<br>                minWeight += edges[i][<span class="hljs-number">2</span>];<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 2. 依次排除一条边，判断权值是否变化，若变大，则证明该边是关键边</span><br>        <span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&gt; <span class="hljs-title">ans</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span></span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; i++) &#123;<br>            <span class="hljs-comment">// 2.1 找出关键边</span><br>            <span class="hljs-function">UnionFind <span class="hljs-title">uf</span><span class="hljs-params">(n)</span></span>;<br>            <span class="hljs-keyword">int</span> weight = <span class="hljs-number">0</span>;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; size; j++) &#123;<br>                <span class="hljs-keyword">int</span> u = edges[j][<span class="hljs-number">0</span>], v = edges[j][<span class="hljs-number">1</span>];<br>                <span class="hljs-keyword">if</span> (i != j &amp;&amp; (uf.find(u) != uf.find(v))) &#123;<br>                    uf.quick_union(u, v);<br>                    weight += edges[j][<span class="hljs-number">2</span>];<br>                &#125;<br>            &#125;<br>            <span class="hljs-comment">// 2.2 关键边去除是无法形成最小生成树的或形成了生成树，但是权值增大。</span><br>            <span class="hljs-keyword">if</span> (uf.getCount() != <span class="hljs-number">1</span> || (uf.getCount() == <span class="hljs-number">1</span> &amp;&amp; weight &gt; minWeight)) &#123;<br>                ans[<span class="hljs-number">0</span>].push_back(edges[i][<span class="hljs-number">3</span>]);<br>                <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 既然是关键边，那么肯定是非关键边。</span><br>            &#125;<br>            <span class="hljs-comment">// 2.2 找出非关键边。非关键去除也对最小权值没有影响。</span><br>            <span class="hljs-comment">// UnionFind uf(n); 这种写法错误，会导致重新定义</span><br>            uf = UnionFind(n);<br>            uf.quick_union(edges[i][<span class="hljs-number">0</span>], edges[i][<span class="hljs-number">1</span>]); <span class="hljs-comment">// 先连接改边，若改变对结果没有影响。那么他就是非关键边</span><br>            weight = edges[i][<span class="hljs-number">2</span>];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; size; j++) &#123;<br>                <span class="hljs-keyword">int</span> u = edges[j][<span class="hljs-number">0</span>], v = edges[j][<span class="hljs-number">1</span>];<br>                <span class="hljs-keyword">if</span> (i != j &amp;&amp; (uf.find(u) != uf.find(v))) &#123;<br>                    uf.quick_union(u, v);<br>                    weight += edges[j][<span class="hljs-number">2</span>];<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (weight == minWeight) &#123;<br>                ans[<span class="hljs-number">1</span>].push_back(edges[i][<span class="hljs-number">3</span>]); <span class="hljs-comment">// 把非关键边下标放进去</span><br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul><li>C++ iota函数用法详解<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="C++ iota函数用法详解">[1]</span></a></sup></li></ul><p>在官方题解中，看到在并查集中有这样的写法</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++">UnionFind(<span class="hljs-keyword">int</span> _n): n(_n), setCount(_n), parent(_n), size(_n, <span class="hljs-number">1</span>) &#123;<br>iota(parent.begin(), parent.end(), <span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure><p>定义在 numeric 头文件中的 iota() 函数模板会用连续的 T 类型值填充序列。</p><pre><code>- 前两个参数是定义序列的正向迭代器，第三个参数是初始的 T 值。- 第三个指定的值会被保存到序列的第一个元素中。保存在第一个元素后的值是通过对前面的值**运用自增运算符得到的**。当然，这意味着 T 类型必须支持 operator++()。</code></pre><p>下面展示了如何生成一个有连续的浮点值元素的 vector 容器：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">double</span>&gt; <span class="hljs-title">data</span><span class="hljs-params">(<span class="hljs-number">9</span>)</span></span>;<br><span class="hljs-keyword">double</span> initial &#123;<span class="hljs-number">-4</span>&#125;;<br><span class="hljs-built_in">std</span>::iota (<span class="hljs-built_in">std</span>::begin (data) , <span class="hljs-built_in">std</span>::end (data) , initial);<br><span class="hljs-built_in">std</span>::copy(<span class="hljs-built_in">std</span>::begin(data), <span class="hljs-built_in">std</span>::end(data),<span class="hljs-built_in">std</span>::ostream_iterator&lt;<span class="hljs-keyword">double</span>&gt;&#123;<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>&lt;&lt; <span class="hljs-built_in">std</span>::fixed &lt;&lt; <span class="hljs-built_in">std</span>::setprecision(<span class="hljs-number">1</span>), <span class="hljs-string">&quot; &quot;</span>&#125;);<br><span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;  <span class="hljs-comment">// -4.0 -3.0 -2.0 -1.0 0.0 1.0 2.0 3.0 4.0</span><br></code></pre></td></tr></table></figure><ul><li>排序 sort vector，並使用 lambda function 匿名函式排序(升序)<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="">[2]</span></a></sup></li></ul><p>很多语言都要匿名函数，那么在C++中如何写呢？</p><p>这是本题的匿名函数在排序中使用</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++">sort(edges.begin(), edges.end(), [](<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; a,<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; b) &#123;<br><span class="hljs-keyword">return</span> a[<span class="hljs-number">2</span>] &lt; b[<span class="hljs-number">2</span>];<br>&#125;);<br></code></pre></td></tr></table></figure><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">std</span>::sort(v.begin(), v.end(), [](<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)&#123;<br><span class="hljs-keyword">return</span> a &lt; b; <span class="hljs-comment">// 升序排列</span><br>&#125;);<br></code></pre></td></tr></table></figure><p>参考上面的两个例子，匿名函数的写法应该是</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++">sort(head_address，end_address，[](<span class="hljs-keyword">auto</span>&amp; a, <span class="hljs-keyword">auto</span>&amp; b) &#123;<br><span class="hljs-keyword">return</span> a &lt; b; <span class="hljs-comment">// a b 的一些比较</span><br>&#125;)<br></code></pre></td></tr></table></figure><section class="footnotes"><h2>参考</h2><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="http://c.biancheng.net/view/681.html">C++ iota函数用法详解</a><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a href="https://shengyu7697.github.io/blog/2019/11/30/std-sort/"></a><a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
+    
+    
+    <categories>
+      
+      <category>LeetCode</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>union-find</tag>
+      
+      <tag>leetcode</tag>
+      
+      <tag>Kruskal</tag>
+      
+      <tag>最小生成树</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1382. 将二叉搜索树变平衡</title>
     <link href="/2021/01/20/1382-%E5%B0%86%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E5%8F%98%E5%B9%B3%E8%A1%A1/"/>
     <url>/2021/01/20/1382-%E5%B0%86%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E5%8F%98%E5%B9%B3%E8%A1%A1/</url>
@@ -22,9 +55,9 @@
       
       <tag>算法</tag>
       
-      <tag>leetcode</tag>
-      
       <tag>完全二叉树</tag>
+      
+      <tag>leetcode</tag>
       
       <tag>二叉搜索树</tag>
       
@@ -117,9 +150,9 @@
       
       <tag>算法</tag>
       
-      <tag>二叉树</tag>
-      
       <tag>完全二叉树</tag>
+      
+      <tag>二叉树</tag>
       
       <tag>二叉查找树</tag>
       
@@ -253,9 +286,9 @@
       
       <tag>leetcode</tag>
       
-      <tag>最小生成树</tag>
-      
       <tag>Kruskal</tag>
+      
+      <tag>最小生成树</tag>
       
     </tags>
     
@@ -284,9 +317,9 @@
       
       <tag>leetcode</tag>
       
-      <tag>最小生成树</tag>
-      
       <tag>Kruskal</tag>
+      
+      <tag>最小生成树</tag>
       
     </tags>
     
@@ -342,9 +375,9 @@
       
       <tag>PAT</tag>
       
-      <tag>数学</tag>
-      
       <tag>算法</tag>
+      
+      <tag>数学</tag>
       
     </tags>
     
@@ -402,9 +435,9 @@
       
       <tag>算法</tag>
       
-      <tag>图</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>图</tag>
       
     </tags>
     
@@ -466,9 +499,9 @@
       
       <tag>算法</tag>
       
-      <tag>图</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>图</tag>
       
       <tag>dfs</tag>
       
@@ -652,9 +685,9 @@
       
       <tag>算法</tag>
       
-      <tag>dfs</tag>
-      
       <tag>bfs</tag>
+      
+      <tag>dfs</tag>
       
       <tag>树</tag>
       
@@ -745,9 +778,9 @@
       
       <tag>算法</tag>
       
-      <tag>leetcode</tag>
-      
       <tag>二叉树</tag>
+      
+      <tag>leetcode</tag>
       
     </tags>
     
@@ -809,9 +842,9 @@
       
       <tag>后序遍历</tag>
       
-      <tag>leetcode</tag>
-      
       <tag>二叉树</tag>
+      
+      <tag>leetcode</tag>
       
       <tag>前序遍历</tag>
       
@@ -871,9 +904,9 @@
       
       <tag>算法</tag>
       
-      <tag>图</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>图</tag>
       
       <tag>leetcode</tag>
       
@@ -987,9 +1020,9 @@
     
     <tags>
       
-      <tag>图</tag>
-      
       <tag>union-find</tag>
+      
+      <tag>图</tag>
       
       <tag>leetcode</tag>
       
@@ -1111,13 +1144,13 @@
       
       <tag>算法</tag>
       
-      <tag>图</tag>
-      
       <tag>union-find</tag>
       
-      <tag>dfs</tag>
+      <tag>图</tag>
       
       <tag>bfs</tag>
+      
+      <tag>dfs</tag>
       
     </tags>
     
@@ -1173,13 +1206,13 @@
       
       <tag>算法</tag>
       
-      <tag>图</tag>
-      
       <tag>union-find</tag>
       
-      <tag>dfs</tag>
+      <tag>图</tag>
       
       <tag>bfs</tag>
+      
+      <tag>dfs</tag>
       
       <tag>leetcode</tag>
       
