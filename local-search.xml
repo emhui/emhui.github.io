@@ -4,6 +4,64 @@
   
   
   <entry>
+    <title>堆</title>
+    <link href="/2021/01/21/%E5%A0%86/"/>
+    <url>/2021/01/21/%E5%A0%86/</url>
+    
+    <content type="html"><![CDATA[<h1 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h1><p><strong>堆是完全二叉树</strong></p><p>既然是完全二叉树，那么可以使用数组对完全二叉树进行描述</p><p><code>i</code>表示当前结点，<code>2i</code>表示左子结点，<code>2i + 1</code>表示右子结点。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">int</span> MAX = <span class="hljs-number">10010</span>;<br><span class="hljs-keyword">int</span> heap[MAX], n; <span class="hljs-comment">// 堆，元素个数</span><br></code></pre></td></tr></table></figure><h2 id="创建堆"><a href="#创建堆" class="headerlink" title="创建堆"></a>创建堆</h2><p>建堆过程中，每次都要向下进行调整。若当前结点比子结点小，则和子结点进行交换，交换后继续和子结点进行比较，直至当前结点大于子结点或不存在子结点了。向下调整的代码如下：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">downAdjust</span><span class="hljs-params">(<span class="hljs-keyword">int</span> low, <span class="hljs-keyword">int</span> high)</span> </span>&#123; <span class="hljs-comment">// low: 当前结点。 high: 堆的最后一个结点</span><br><span class="hljs-keyword">int</span> i = low, j = low * <span class="hljs-number">2</span>; <span class="hljs-comment">// j表示左子结点</span><br><span class="hljs-keyword">while</span> (j &lt;= high) &#123;<br><span class="hljs-comment">// 找出左右子结点中值最大的结点下标。</span><br><span class="hljs-keyword">if</span> (j + <span class="hljs-number">1</span> &lt; high &amp;&amp; heap[j + <span class="hljs-number">1</span>] &gt; heap[j]) &#123; <span class="hljs-comment">// 右结点存在 &amp;&amp; 右结点大于左结点</span><br>j = j + <span class="hljs-number">1</span>;<br>&#125;<br><span class="hljs-comment">// 和根结点进行比较</span><br><span class="hljs-keyword">if</span> (heap[i] &lt; heap[j]) &#123; <span class="hljs-comment">// 小于子结点</span><br>swap(heap[i], heap[j]); <span class="hljs-comment">// 交换</span><br>i = j; <span class="hljs-comment">// 交换后，i移动到新的位置。继续和子结点比较</span><br>j = i * <span class="hljs-number">2</span>; <span class="hljs-comment">// j 移动到i的新子结点</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br><span class="hljs-keyword">break</span>; <span class="hljs-comment">// 若i结点大于子结点，则不需要移动。</span><br>&#125;<br>&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure><p>接下来就是建立一个堆了。对于一个大小为$n$的堆，它的叶子结点数量是$|n/2|$。因为叶子结点不需要调整顺序，因此需要调整顺序的结点范围在$1 \sim n/2$。于是可以从$n/2$开始倒着遍历，为什么倒着遍历呢？因为每次调整都可以保证根结点都变成了最大值。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">createHeap</span><span class="hljs-params">()</span> </span>&#123;<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n / <span class="hljs-number">2</span>; i &gt; <span class="hljs-number">0</span>; i--) &#123;<br>downAdjust(i, n);<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="删除堆顶元素"><a href="#删除堆顶元素" class="headerlink" title="删除堆顶元素"></a>删除堆顶元素</h2><p>删除堆顶元素，只需要将最后一个值覆盖堆顶元素，由于此时堆顶元素不是最大值，因此只需要对堆顶元素进行调整即可。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">deleteTop</span><span class="hljs-params">()</span> </span>&#123;<br>heap[<span class="hljs-number">1</span>] = heap[n--]; <span class="hljs-comment">// 元素n-1</span><br>downAdjust(<span class="hljs-number">1</span>, n);<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="在堆中添加元素"><a href="#在堆中添加元素" class="headerlink" title="在堆中添加元素"></a>在堆中添加元素</h2><p>在堆中添加元素，需要把元素加到最后面，然后进行向上调整，把自己和父结点对比。若权值大于父结点，则与其交换，直到到达堆顶或者结点权值小于父结点停止。</p><p>下面是向上调整代码</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">upAdjust</span><span class="hljs-params">(<span class="hljs-keyword">int</span> low, <span class="hljs-keyword">int</span> high)</span> </span>&#123;<br><span class="hljs-keyword">int</span> i = high, j = i / <span class="hljs-number">2</span>; <span class="hljs-comment">// j为i的父结点</span><br><span class="hljs-keyword">while</span> (j &gt;= low) &#123;<br><span class="hljs-keyword">if</span> (heap[i] &gt; heap[j]) &#123;<br>swap(heap[i], heap[j]);<br>i = j;<br>j = j / <span class="hljs-number">2</span>; <span class="hljs-comment">// 找当上一个父结点</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br><span class="hljs-keyword">break</span>; <span class="hljs-comment">// 权值小于父结点，不替换</span><br>&#125;<br>&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>heap[++n] = x;<br>upAdjust(<span class="hljs-number">1</span>, n);<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>堆</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>1098 Insertion or Heap Sort</title>
+    <link href="/2021/01/21/1098-Insertion-or-Heap-Sort/"/>
+    <url>/2021/01/21/1098-Insertion-or-Heap-Sort/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1098-Insertion-or-Heap-Sort"><a href="#1098-Insertion-or-Heap-Sort" class="headerlink" title="1098 Insertion or Heap Sort"></a>1098 Insertion or Heap Sort</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/KmXTsV.png" alt="KmXTsV"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题和<a href=""></a>类似,都是要通过</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> MAX = <span class="hljs-number">10010</span>;<br><span class="hljs-keyword">int</span> origin[MAX], temp[MAX], ans[MAX], change[MAX];<br><span class="hljs-keyword">int</span> n;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isSame</span><span class="hljs-params">(<span class="hljs-keyword">int</span> A[], <span class="hljs-keyword">int</span> B[])</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        <span class="hljs-keyword">if</span> (A[i] != B[i]) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">insertSort</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">bool</span> flag = <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>; i &lt;= n; i++) &#123;<br>        <span class="hljs-keyword">if</span> (i != <span class="hljs-number">2</span> &amp;&amp; isSame(temp, change)) &#123; flag = <span class="hljs-literal">true</span>; &#125;<br>        sort(temp, temp + i + <span class="hljs-number">1</span>);<br>        <span class="hljs-keyword">if</span> (flag) &#123;<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;&#125; <span class="hljs-comment">// 已经是找到了目标数组</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">showArray</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arr[])</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, arr[i]);<br>        <span class="hljs-keyword">if</span> (i &lt; n) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot; &quot;</span>);<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">downAdjust</span><span class="hljs-params">(<span class="hljs-keyword">int</span> low, <span class="hljs-keyword">int</span> high)</span> </span>&#123; <span class="hljs-comment">// high最后一个结点</span><br>    <span class="hljs-keyword">int</span> i = low, j = i * <span class="hljs-number">2</span>; <span class="hljs-comment">// i为当前正要调整结点, j为左孩子结点</span><br>    <span class="hljs-keyword">while</span> (j &lt;= high) &#123;<br>        <span class="hljs-keyword">if</span> (j + <span class="hljs-number">1</span> &lt;= high &amp;&amp; temp[j] &lt; temp[j + <span class="hljs-number">1</span>]) &#123; <span class="hljs-comment">// 找到左右最大的结点，去和待调整点比较</span><br>            j = j + <span class="hljs-number">1</span>; <span class="hljs-comment">// j存储右边孩子结点</span><br>        &#125;<br>        <span class="hljs-keyword">if</span> (temp[j] &gt; temp[i]) &#123;<br>            swap(temp[i], temp[j]);<br>            i = j; <span class="hljs-comment">// 同时移动根结点</span><br>            j = j*<span class="hljs-number">2</span>; <span class="hljs-comment">// j也进行移动</span><br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">break</span>; <span class="hljs-comment">// 如果根结点大于子结点，不需要调整</span><br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">heapSort</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">bool</span> flag = <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n / <span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">1</span>; i--) &#123;<br>        downAdjust(i, n);<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n; i &gt; <span class="hljs-number">1</span>; i--) &#123;<br>        <span class="hljs-keyword">if</span> (i != n &amp;&amp; isSame(temp, change)) &#123;<br>            flag = <span class="hljs-literal">true</span>;<br>        &#125;<br>        swap(temp[i], temp[<span class="hljs-number">1</span>]);<br>        downAdjust(<span class="hljs-number">1</span>, i - <span class="hljs-number">1</span>);<br>        <span class="hljs-keyword">if</span> (flag) &#123;<br>            showArray(temp);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>    &#125;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;n);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;origin[i]);<br>        temp[i] = origin[i];<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;change[i]);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (insertSort()) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Insertion Sort\n&quot;</span>);<br>        showArray(temp);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Heap Sort\n&quot;</span>);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;temp[i] = origin[i];&#125;<br>        heapSort();<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>堆</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1489. 找到最小生成树里的关键边和伪关键边</title>
     <link href="/2021/01/21/1489-%E6%89%BE%E5%88%B0%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%87%8C%E7%9A%84%E5%85%B3%E9%94%AE%E8%BE%B9%E5%92%8C%E4%BC%AA%E5%85%B3%E9%94%AE%E8%BE%B9/"/>
     <url>/2021/01/21/1489-%E6%89%BE%E5%88%B0%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%87%8C%E7%9A%84%E5%85%B3%E9%94%AE%E8%BE%B9%E5%92%8C%E4%BC%AA%E5%85%B3%E9%94%AE%E8%BE%B9/</url>
@@ -55,9 +113,9 @@
       
       <tag>算法</tag>
       
-      <tag>完全二叉树</tag>
-      
       <tag>leetcode</tag>
+      
+      <tag>完全二叉树</tag>
       
       <tag>二叉搜索树</tag>
       
@@ -150,9 +208,9 @@
       
       <tag>算法</tag>
       
-      <tag>完全二叉树</tag>
-      
       <tag>二叉树</tag>
+      
+      <tag>完全二叉树</tag>
       
       <tag>二叉查找树</tag>
       
@@ -375,9 +433,9 @@
       
       <tag>PAT</tag>
       
-      <tag>算法</tag>
-      
       <tag>数学</tag>
+      
+      <tag>算法</tag>
       
     </tags>
     
@@ -435,9 +493,9 @@
       
       <tag>算法</tag>
       
-      <tag>union-find</tag>
-      
       <tag>图</tag>
+      
+      <tag>union-find</tag>
       
     </tags>
     
@@ -499,9 +557,9 @@
       
       <tag>算法</tag>
       
-      <tag>union-find</tag>
-      
       <tag>图</tag>
+      
+      <tag>union-find</tag>
       
       <tag>dfs</tag>
       
@@ -685,9 +743,9 @@
       
       <tag>算法</tag>
       
-      <tag>bfs</tag>
-      
       <tag>dfs</tag>
+      
+      <tag>bfs</tag>
       
       <tag>树</tag>
       
@@ -778,9 +836,9 @@
       
       <tag>算法</tag>
       
-      <tag>二叉树</tag>
-      
       <tag>leetcode</tag>
+      
+      <tag>二叉树</tag>
       
     </tags>
     
@@ -842,9 +900,9 @@
       
       <tag>后序遍历</tag>
       
-      <tag>二叉树</tag>
-      
       <tag>leetcode</tag>
+      
+      <tag>二叉树</tag>
       
       <tag>前序遍历</tag>
       
@@ -904,9 +962,9 @@
       
       <tag>算法</tag>
       
-      <tag>union-find</tag>
-      
       <tag>图</tag>
+      
+      <tag>union-find</tag>
       
       <tag>leetcode</tag>
       
@@ -1020,9 +1078,9 @@
     
     <tags>
       
-      <tag>union-find</tag>
-      
       <tag>图</tag>
+      
+      <tag>union-find</tag>
       
       <tag>leetcode</tag>
       
@@ -1144,13 +1202,13 @@
       
       <tag>算法</tag>
       
-      <tag>union-find</tag>
-      
       <tag>图</tag>
       
-      <tag>bfs</tag>
+      <tag>union-find</tag>
       
       <tag>dfs</tag>
+      
+      <tag>bfs</tag>
       
     </tags>
     
@@ -1206,13 +1264,13 @@
       
       <tag>算法</tag>
       
-      <tag>union-find</tag>
-      
       <tag>图</tag>
       
-      <tag>bfs</tag>
+      <tag>union-find</tag>
       
       <tag>dfs</tag>
+      
+      <tag>bfs</tag>
       
       <tag>leetcode</tag>
       
