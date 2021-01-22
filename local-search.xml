@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>989. 数组形式的整数加法</title>
+    <link href="/2021/01/22/989-%E6%95%B0%E7%BB%84%E5%BD%A2%E5%BC%8F%E7%9A%84%E6%95%B4%E6%95%B0%E5%8A%A0%E6%B3%95/"/>
+    <url>/2021/01/22/989-%E6%95%B0%E7%BB%84%E5%BD%A2%E5%BC%8F%E7%9A%84%E6%95%B4%E6%95%B0%E5%8A%A0%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<h1 id="989-数组形式的整数加法"><a href="#989-数组形式的整数加法" class="headerlink" title="989. 数组形式的整数加法"></a><a href="https://leetcode-cn.com/problems/add-to-array-form-of-integer/">989. 数组形式的整数加法</a></h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/aBM7Pe.png" alt="aBM7Pe"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ul><li>方法一：按照最低位，逐渐往上加。然后把进位放到<code>K</code>上面。</li><li>方法二：参考<a href="https://leetcode-cn.com/problems/add-to-array-form-of-integer/solution/shu-zu-xing-shi-de-zheng-shu-jia-fa-by-l-jljp/">官方题解二</a>。将K加载数组的最低位，例如</li></ul><p>$123+912$，我们把它表示成 $[1,2,3+912]$。然后，我们计算 $3+912=915$。$5$ 留在当前这一位，将 $910/10=91$ 以进位的形式加入下一位。</p><p>然后，我们再重复这个过程，计算 $[1,2+91,5]$。我们得到 $93$，$3$ 留在当前位，将 $90/10=9$ 以进位的形式加入下一位。继而又得到 $[1+9,3,5]$，重复这个过程之后，最终得到结果 $[1,0,3,5]$。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>方法一</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">addToArrayForm</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; A, <span class="hljs-keyword">int</span> K)</span> </span>&#123;<br>        <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; ans;<br>        <span class="hljs-keyword">int</span> n = A.size();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123; <span class="hljs-comment">// 从地位往高位计算，同时将进位的1加到K上面</span><br>            <span class="hljs-keyword">int</span> sum = A[i] + K % <span class="hljs-number">10</span>; <span class="hljs-comment">// 最后一位相加</span><br>            K /= <span class="hljs-number">10</span>; <span class="hljs-comment">// K的最后一位计算完成</span><br>            <span class="hljs-keyword">if</span> (sum &gt;= <span class="hljs-number">10</span>) &#123; <span class="hljs-comment">// 判断是否存在进位</span><br>                K += <span class="hljs-number">1</span>; <span class="hljs-comment">// 进位则在K上面+1</span><br>                sum -= <span class="hljs-number">10</span>;<br>            &#125;<br>            ans.push_back(sum);<br>        &#125;<br>        <span class="hljs-keyword">while</span> (K &gt; <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// 计算剩余的结果</span><br>            ans.push_back(K % <span class="hljs-number">10</span>);<br>            K /= <span class="hljs-number">10</span>;<br>        &#125;<br>        reverse(ans.begin(), ans.end());<br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure><p>方法二</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">addToArrayForm</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; A, <span class="hljs-keyword">int</span> K)</span> </span>&#123;<br>        <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; ans;<br>        <span class="hljs-keyword">int</span> n = A.size();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span> || K &gt; <span class="hljs-number">0</span>; i--, K /= <span class="hljs-number">10</span>) &#123; <span class="hljs-comment">// 从地位往高位计算，同时将最低位加到K上面</span><br>            <span class="hljs-keyword">if</span> (i &gt;= <span class="hljs-number">0</span>) &#123;<br>                K += A[i];<br>            &#125;<br>            ans.push_back(K % <span class="hljs-number">10</span>);<br>        &#125;<br>        reverse(ans.begin(), ans.end());<br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>LeetCode</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+      <tag>数学</tag>
+      
+      <tag>leetcode</tag>
+      
+      <tag>数组</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>堆</title>
     <link href="/2021/01/21/%E5%A0%86/"/>
     <url>/2021/01/21/%E5%A0%86/</url>
@@ -433,9 +464,9 @@
       
       <tag>PAT</tag>
       
-      <tag>数学</tag>
-      
       <tag>算法</tag>
+      
+      <tag>数学</tag>
       
     </tags>
     
@@ -561,9 +592,9 @@
       
       <tag>union-find</tag>
       
-      <tag>dfs</tag>
-      
       <tag>树</tag>
+      
+      <tag>dfs</tag>
       
     </tags>
     
@@ -621,9 +652,9 @@
       
       <tag>算法</tag>
       
-      <tag>dfs</tag>
-      
       <tag>树</tag>
+      
+      <tag>dfs</tag>
       
     </tags>
     
@@ -743,11 +774,11 @@
       
       <tag>算法</tag>
       
-      <tag>dfs</tag>
-      
       <tag>bfs</tag>
       
       <tag>树</tag>
+      
+      <tag>dfs</tag>
       
     </tags>
     
@@ -1206,9 +1237,9 @@
       
       <tag>union-find</tag>
       
-      <tag>dfs</tag>
-      
       <tag>bfs</tag>
+      
+      <tag>dfs</tag>
       
     </tags>
     
@@ -1268,9 +1299,9 @@
       
       <tag>union-find</tag>
       
-      <tag>dfs</tag>
-      
       <tag>bfs</tag>
+      
+      <tag>dfs</tag>
       
       <tag>leetcode</tag>
       
