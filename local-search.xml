@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>1150 Travelling Salesman Problem</title>
+    <link href="/2021/01/23/1150-Travelling-Salesman-Problem/"/>
+    <url>/2021/01/23/1150-Travelling-Salesman-Problem/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1150-Travelling-Salesman-Problem-25分"><a href="#1150-Travelling-Salesman-Problem-25分" class="headerlink" title="1150 Travelling Salesman Problem (25分)"></a>1150 Travelling Salesman Problem (25分)</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/FcJdwU.png" alt="FcJdwU"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题给定一个带路径无向图，在给出一系列的路径。让你计算出路径属于哪一类，路径的总长度。</p><p>上述示例中的无向图如下图所示</p><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/vdd6GA.png" alt="vdd6GA"></p><p>图中有三种路径类型，如何对三种路径判断是关键，同时还包括一种无法到达的路径。</p><ul><li>首先需要判断无法到达的路径，题中示例$7-6-3- 2- 5- 4- 1- 6$中，$3-2$无法到达，令无法到达为<code>INF</code>，若最后<code>cnt &gt; INF</code>证明无法到达该路径，输出<code>NA</code>.</li><li>接下来判断<code>Not a TS cycle</code>, 根据示例<code>4:1-2-5-1</code>和<code>7:6-1-2-5-4-3-1</code>可以知道，当<strong>路径上没有所有城市</strong>或<strong>路径的起点城市和最终城市不一样</strong>，属于<code>Not a TS cycle</code></li><li>接下来是对<code>TS cycle</code>的判断，该类型是指部分城市访问过多次，所以必须满足<code>pn &gt; n + 1</code>,即路径上的城市都访问到了，且不知访问依次</li><li>最后剩下的就是<code>TS simple cycle</code>类型</li></ul><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> MAX = <span class="hljs-number">210</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">987654321</span>;<br><br><span class="hljs-keyword">int</span> G[MAX][MAX], path[MAX];<br><span class="hljs-keyword">bool</span> visited[MAX];<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> n, m, k, c1, c2, dis, pn, minDis = INF, minPathId = INF;<br>    fill(G[<span class="hljs-number">0</span>], G[<span class="hljs-number">0</span>] + MAX * MAX, INF);<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d&quot;</span>, &amp;n, &amp;m);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d%d%d&quot;</span>, &amp;c1, &amp;c2, &amp;dis);<br>        G[c1][c2] = G[c2][c1] = dis;<br>    &#125;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;k);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= k; i++) &#123;<br>        <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">bool</span> isAllVisited = <span class="hljs-literal">true</span>;<br>        <span class="hljs-built_in">memset</span>(visited, <span class="hljs-literal">false</span>, <span class="hljs-keyword">sizeof</span>(visited));<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;pn);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; pn; j++) &#123;<br>            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>, &amp;path[j]);<br>            visited[path[j]] = <span class="hljs-literal">true</span>;<br>        &#125;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; pn - <span class="hljs-number">1</span>; j++) &#123;<br>            cnt += G[path[j]][path[j + <span class="hljs-number">1</span>]];<br>        &#125;<br>        <span class="hljs-comment">// 判断是否每个点都访问到了</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; j++) &#123;<br>            <span class="hljs-keyword">if</span> (!visited[j]) &#123;<br>                isAllVisited = <span class="hljs-literal">false</span>;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (cnt &gt; INF) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Path %d: NA (Not a TS cycle)\n&quot;</span>, i);<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!isAllVisited || path[<span class="hljs-number">0</span>] != path[pn - <span class="hljs-number">1</span>])&#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Path %d: %d (Not a TS cycle)\n&quot;</span>, i, cnt);<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pn &gt; n + <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-comment">// printf(&quot;Path %d: %d (TS simple cycle)\n&quot;, i, cnt);</span><br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Path %d: %d (TS cycle)\n&quot;</span>, i, cnt);<br>            <span class="hljs-keyword">if</span> (cnt &lt; minDis) &#123;<br>                minDis = cnt;<br>                minPathId = i;<br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Path %d: %d (TS simple cycle)\n&quot;</span>, i, cnt);<br>             <span class="hljs-keyword">if</span> (cnt &lt; minDis) &#123;<br>                minDis = cnt;<br>                minPathId = i;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Shortest Dist(%d) = %d\n&quot;</span>, minPathId, minDis);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1149 Dangerous Goods Packaging</title>
     <link href="/2021/01/23/1149-Dangerous-Goods-Packaging/"/>
     <url>/2021/01/23/1149-Dangerous-Goods-Packaging/</url>
@@ -256,9 +283,9 @@
       
       <tag>算法</tag>
       
-      <tag>leetcode</tag>
-      
       <tag>数组</tag>
+      
+      <tag>leetcode</tag>
       
     </tags>
     
@@ -944,9 +971,9 @@
       
       <tag>算法</tag>
       
-      <tag>树</tag>
-      
       <tag>bfs</tag>
+      
+      <tag>树</tag>
       
     </tags>
     
@@ -1008,9 +1035,9 @@
       
       <tag>dfs</tag>
       
-      <tag>树</tag>
-      
       <tag>bfs</tag>
+      
+      <tag>树</tag>
       
     </tags>
     
