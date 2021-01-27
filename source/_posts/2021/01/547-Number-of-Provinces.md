@@ -26,7 +26,7 @@ math: true
 
 1. - [x] DFS
 2. - [x] BFS
-3. - [ ] union-ﬁnd
+3. - [x] union-ﬁnd
 
 ## 代码实现
 
@@ -132,3 +132,29 @@ public:
 复杂度分析
 - 时间复杂度：$O(n^2)$，遍历整个矩阵
 - 空间复杂度: $O(n)$.visited大小的空间
+
+### union-find
+
+Python
+
+```python
+class Solution:
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        size = len(isConnected)
+        parent = list(range(size)) # 初始化
+        count = size # 连通分量数量
+
+        def find(p): # 找到结点p
+            while p != parent[p]: p = parent[p]
+            return p
+        def union(p, q):
+            nonlocal count
+            parent[find(p)] = find(q)
+            count -= 1
+        for i in range(size):
+            for j in range(size):
+                if isConnected[i][j] == 1:
+                    if find(i) != find(j):
+                        union(i,j)
+        return count
+```
