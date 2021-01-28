@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>1125 Chain the Ropes</title>
+    <link href="/2021/01/28/1125-Chain-the-Ropes/"/>
+    <url>/2021/01/28/1125-Chain-the-Ropes/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1125-Chain-the-Ropes-25分"><a href="#1125-Chain-the-Ropes-25分" class="headerlink" title="1125 Chain the Ropes (25分)"></a>1125 Chain the Ropes (25分)</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/aGJWm3.png" alt="aGJWm3"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><strong>题目意思</strong></p><p>题目要求<strong>将所有绳子连接起来</strong>，组成的最大长度是多少。求最后绳子的最大长度。</p><p>Given some segments of rope, you are supposed to <strong>chain them into one rope</strong>。</p><p><strong>分析</strong></p><p>因为每次俩俩折叠长度就会减半，所以最长的绳子应该放到最后再折叠。先将绳子进行排序，然后按长度从小到进行连接和折叠。</p><p><strong>问题</strong></p><p>题目中最后输出有一句话</p><blockquote><p> The result must be rounded to the nearest integer that is no greater than the maximum length.</p></blockquote><p>这句话不是说结果需要四舍五入吗？但是使用四舍五入的话，最后用例无法通过。奇怪…</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> n = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">cin</span> &gt;&gt; n;<br>    <span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">ans</span><span class="hljs-params">(n)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<span class="hljs-built_in">cin</span> &gt;&gt; ans[i];&#125;<br>    sort(ans.begin(), ans.end());<br>    sum = ans[<span class="hljs-number">0</span>];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) &#123;<br>        sum = (sum + ans[i]) / <span class="hljs-number">2</span>;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, sum);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>数学</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>数组</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1127 ZigZagging on a Tree</title>
     <link href="/2021/01/28/1127-ZigZagging-on-a-Tree/"/>
     <url>/2021/01/28/1127-ZigZagging-on-a-Tree/</url>
