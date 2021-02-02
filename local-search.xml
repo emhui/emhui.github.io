@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>1083 List Grades (25 分)</title>
+    <link href="/2021/02/02/1083-List-Grades-25-%E5%88%86/"/>
+    <url>/2021/02/02/1083-List-Grades-25-%E5%88%86/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1083-List-Grades-25-分"><a href="#1083-List-Grades-25-分" class="headerlink" title="1083 List Grades (25 分)"></a>1083 List Grades (25 分)</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/oW2RoK.png" alt="oW2RoK"></p><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>本题考察</p><ul><li>结构体排序</li></ul><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">node</span> &#123;</span><br>    <span class="hljs-built_in">string</span> name, id;<br>    <span class="hljs-keyword">int</span> grade;<br>    node(<span class="hljs-built_in">string</span> _name, <span class="hljs-built_in">string</span> _id, <span class="hljs-keyword">int</span> _grade): name(_name), id(_id), grade(_grade) &#123;&#125;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">cmp</span><span class="hljs-params">(node &amp;a, node &amp;b)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a.grade &gt; b.grade;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> n, grade1, grade2, grade;<br>    <span class="hljs-built_in">string</span> name, id;<br>    <span class="hljs-built_in">cin</span> &gt;&gt; n;<br>    <span class="hljs-built_in">vector</span>&lt;node&gt; vn;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-built_in">cin</span> &gt;&gt; name &gt;&gt; id &gt;&gt; grade;<br>        vn.push_back(node(name, id, grade));<br>    &#125;<br>    sort(vn.begin(), vn.end(), cmp);<br>    <span class="hljs-built_in">cin</span> &gt;&gt; grade1 &gt;&gt; grade2;<br>    <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-keyword">if</span> (vn[i].grade &gt;= grade1 &amp;&amp; vn[i].grade &lt;= grade2) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s %s\n&quot;</span>,vn[i].name.c_str(), vn[i].id.c_str());<br>            cnt++;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (cnt == <span class="hljs-number">0</span>) <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;NONE\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>数组</tag>
+      
+      <tag>排序</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1084 Broken Keyboard (20 分)</title>
     <link href="/2021/02/02/1084-Broken-Keyboard-20-%E5%88%86/"/>
     <url>/2021/02/02/1084-Broken-Keyboard-20-%E5%88%86/</url>
