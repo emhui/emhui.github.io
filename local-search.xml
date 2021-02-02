@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>1084 Broken Keyboard (20 分)</title>
+    <link href="/2021/02/02/1084-Broken-Keyboard-20-%E5%88%86/"/>
+    <url>/2021/02/02/1084-Broken-Keyboard-20-%E5%88%86/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1084-Broken-Keyboard-20-分"><a href="#1084-Broken-Keyboard-20-分" class="headerlink" title="1084 Broken Keyboard (20 分)"></a>1084 Broken Keyboard (20 分)</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/pE3exE.png" alt="pE3exE"></p><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>本题主要是使用<strong>哈希表记录按键数量</strong></p><p>其中两个问题要解决</p><ul><li>小写字符转大写</li><li>如何按序输出坏键</li></ul><p><strong>需要将所有小写字符转成大写</strong></p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++">ch - <span class="hljs-string">&#x27;a&#x27;</span> + <span class="hljs-string">&#x27;A&#x27;</span>;<br></code></pre></td></tr></table></figure><p><strong>输出需要按照原来的顺序输出。这一步怎么实现?</strong></p><p>使用一个变量<code>has[128]</code>记录使用键盘键入的字符串中每个字符的数量，然后再去原始的字符串中按顺序进行删除操作。若出现<code>has[i] &lt; 0</code>证明该键是缺失的，同时题目要求坏键只输出一遍，因此在用<code>visited[i]</code>记录当前坏键是否已经访问，若没有访问就打印出来，并标记为已经访问。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> MAX = <span class="hljs-number">81</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">char</span> <span class="hljs-title">switch2capital</span><span class="hljs-params">(<span class="hljs-keyword">char</span> ch)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (ch &gt;= <span class="hljs-string">&#x27;a&#x27;</span> &amp;&amp; ch &lt;= <span class="hljs-string">&#x27;z&#x27;</span>) &#123;<br>            ch = ch - <span class="hljs-string">&#x27;a&#x27;</span> + <span class="hljs-string">&#x27;A&#x27;</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> ch;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">char</span> origin[MAX], type_out[MAX], ch;<br>    <span class="hljs-keyword">char</span> has[<span class="hljs-number">128</span>] =&#123;<span class="hljs-number">0</span>&#125;;<br>    <span class="hljs-keyword">bool</span> visited[<span class="hljs-number">128</span>] = &#123;<span class="hljs-literal">false</span>&#125;;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%s%s&quot;</span>, origin, type_out);<br>    <span class="hljs-keyword">int</span> m = <span class="hljs-built_in">strlen</span>(origin), n = <span class="hljs-built_in">strlen</span>(type_out);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        ch = switch2capital(type_out[i]);<br>        has[ch]++;<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>        ch = switch2capital(origin[i]);<br>        has[ch]--;<br>        <span class="hljs-keyword">if</span> (has[ch] &lt; <span class="hljs-number">0</span> &amp;&amp; !visited[ch]) &#123;<br>            visited[ch] = <span class="hljs-literal">true</span>;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%c&quot;</span>, ch);<br>        &#125;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>哈希表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1085 Perfect Sequence (25 分)</title>
     <link href="/2021/02/02/1085-Perfect-Sequence-25-%E5%88%86/"/>
     <url>/2021/02/02/1085-Perfect-Sequence-25-%E5%88%86/</url>
