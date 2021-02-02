@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>424. 替换后的最长重复字符 - 力扣（LeetCode）</title>
+    <link href="/2021/02/02/424-%E6%9B%BF%E6%8D%A2%E5%90%8E%E7%9A%84%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6-%E5%8A%9B%E6%89%A3%EF%BC%88LeetCode%EF%BC%89/"/>
+    <url>/2021/02/02/424-%E6%9B%BF%E6%8D%A2%E5%90%8E%E7%9A%84%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6-%E5%8A%9B%E6%89%A3%EF%BC%88LeetCode%EF%BC%89/</url>
+    
+    <content type="html"><![CDATA[<h1 id="424-替换后的最长重复字符-力扣（LeetCode）"><a href="#424-替换后的最长重复字符-力扣（LeetCode）" class="headerlink" title="424. 替换后的最长重复字符 - 力扣（LeetCode）"></a><a href="https://leetcode-cn.com/problems/longest-repeating-character-replacement">424. 替换后的最长重复字符 - 力扣（LeetCode）</a></h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给你一个仅由大写英文字母组成的字符串，你可以将任意位置上的字符替换成另外的字符，总共可最多替换 k 次。在执行上述操作后，找到包含重复字母的最长子串的长度。</p><p>注意：字符串长度 和 k 不会超过 104。</p><p><strong>示例1</strong></p><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs 1c">输入：s = <span class="hljs-string">&quot;ABAB&quot;</span>, k = <span class="hljs-number">2</span><br>输出：<span class="hljs-number">4</span><br>解释：用两个&#x27;A&#x27;替换为两个&#x27;B&#x27;,反之亦然。<br></code></pre></td></tr></table></figure><p><strong>示例2</strong></p><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs lsl">输入：s = <span class="hljs-string">&quot;AABABBA&quot;</span>, k = <span class="hljs-number">1</span><br>输出：<span class="hljs-number">4</span><br>解释：<br>将中间的一个&#x27;A&#x27;替换为&#x27;B&#x27;,字符串变为 <span class="hljs-string">&quot;AABBBBA&quot;</span>。<br>子串 <span class="hljs-string">&quot;BBBB&quot;</span> 有最长重复字母, 答案为 <span class="hljs-number">4</span>。<br></code></pre></td></tr></table></figure><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>本题需要维护一个最大范围的滑动窗口。同时该滑动窗口需要移动，扩张和收缩<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="C++最详细题解！">[1]</span></a></sup>。</p><p>使用<code>left,right</code>记录滑动窗口范围，同时使用<code>max_count</code>统计当前窗口内出现某个字符出现最多的次数。若当<code>right - left + 1 - max_count &gt; k</code>证明<code>k</code>值不够用，这是就需要进行收缩，同时<code>left</code>所在的字符出现的频率也要<code>-1</code>.</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">characterReplacement</span><span class="hljs-params">(<span class="hljs-built_in">string</span> s, <span class="hljs-keyword">int</span> k)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> left = <span class="hljs-number">0</span>, right = <span class="hljs-number">0</span>, ans = <span class="hljs-number">0</span>, max_count = <span class="hljs-number">0</span>, n = s.length();<br>        <span class="hljs-keyword">int</span> freq[<span class="hljs-number">26</span>] = &#123;<span class="hljs-number">0</span>&#125;; <span class="hljs-comment">// 记录s中left-right之间单词出现的频率</span><br>        <span class="hljs-keyword">while</span> (right &lt; n) &#123;<br>            freq[s[right] - <span class="hljs-string">&#x27;A&#x27;</span>]++; <span class="hljs-comment">//</span><br>            max_count = max(max_count, freq[s[right] - <span class="hljs-string">&#x27;A&#x27;</span>]); <span class="hljs-comment">// 计算当前的l-r范围内出现次数的的字符数量</span><br>            <span class="hljs-comment">// k的数量不够，需要进行收缩</span><br>            <span class="hljs-keyword">if</span> (right - left + <span class="hljs-number">1</span> - max_count &gt; k) &#123;<br>                freq[s[left] - <span class="hljs-string">&#x27;A&#x27;</span>]--; <span class="hljs-comment">// 字符收缩</span><br>                left++;<br><br>            &#125;<br>            ans = max(ans, right - left + <span class="hljs-number">1</span>);<br>            right++;<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure><section class="footnotes"><h2>参考</h2><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="https://leetcode-cn.com/problems/longest-repeating-character-replacement/solution/czui-xiang-xi-ti-jie-by-heroding-olgt/">C++最详细题解！</a><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
+    
+    
+    <categories>
+      
+      <category>LeetCode</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>leetcode</tag>
+      
+      <tag>双指针</tag>
+      
+      <tag>滑动窗口</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1100 Mars Numbers (20分)</title>
     <link href="/2021/02/01/1100-Mars-Numbers-20%E5%88%86/"/>
     <url>/2021/02/01/1100-Mars-Numbers-20%E5%88%86/</url>
