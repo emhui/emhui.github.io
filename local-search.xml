@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>1058 A+B in Hogwarts (20 分)</title>
+    <link href="/2021/02/06/1058-A-B-in-Hogwarts-20-%E5%88%86/"/>
+    <url>/2021/02/06/1058-A-B-in-Hogwarts-20-%E5%88%86/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1058-A-B-in-Hogwarts-20-分"><a href="#1058-A-B-in-Hogwarts-20-分" class="headerlink" title="1058 A+B in Hogwarts (20 分)"></a>1058 A+B in Hogwarts (20 分)</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/5DShR6.png" alt="5DShR6"></p><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>本题考查 <strong>比较大的整数加法</strong>，<strong>不同单位转化（比如转成时分秒）</strong></p><p><strong>比较大的整数加法</strong></p><p>对于比较大的整数，使用<code>long long</code>类型，如果整数还是很大，比如超过$2^{63} - 1$，则使用<code>string</code>类型表示。</p><p>本题中需要对<code>int</code>类型强制转换。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// 前面需要加（long long）</span><br><span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> sum = (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span>)Galleon * (a1 + a2) + Sickle * (b1 + b2) + (c1 + c2);<br></code></pre></td></tr></table></figure><p><strong>不同单位转化</strong></p><p>比较常见的应用就是时分秒的转化。比如给你一个n秒，让你转成时分秒的格式。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n;<br><span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> h = n / <span class="hljs-number">3600</span>;<br><span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> m = n / <span class="hljs-number">60</span> % <span class="hljs-number">60</span>;<br><span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> s = n % <span class="hljs-number">60</span>;<br></code></pre></td></tr></table></figure><p>本题中对<code>Galleon, Sickle, Knuts</code>的转化如下</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%lld.%lld.%lld\n&quot;</span>, sum / Galleon, sum % Galleon / Sickle, sum % Sickle);<br></code></pre></td></tr></table></figure><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><br><span class="hljs-comment">// Seventeen silver Sickles to a Galleon and twenty-nine Knuts to a Sickle</span><br><span class="hljs-comment">// 17s = 1g, 29k = 1s, 29 * 17k = 1g;</span><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> Galleon = <span class="hljs-number">17</span> * <span class="hljs-number">29</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> Sickle = <span class="hljs-number">29</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> Knut = <span class="hljs-number">1</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> a1, b1, c1, a2, b2, c2;<br>    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d.%d.%d %d.%d.%d&quot;</span>, &amp;a1, &amp;b1, &amp;c1, &amp;a2, &amp;b2, &amp;c2);<br><br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> sum = (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span>)Galleon * (a1 + a2) + Sickle * (b1 + b2) + (c1 + c2);<br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%lld.%lld.%lld\n&quot;</span>, sum / Galleon, sum % Galleon / Sickle, sum % Sickle);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1040 Longest Symmetric String (25 分)</title>
     <link href="/2021/02/06/1040-Longest-Symmetric-String-25-%E5%88%86/"/>
     <url>/2021/02/06/1040-Longest-Symmetric-String-25-%E5%88%86/</url>
