@@ -1,7 +1,7 @@
 ---
 title: 1066 Root of AVL Tree
 date: 2021-01-20 16:43:57
-tags: [PAT, 算法， 平衡二叉树, AVL, 二叉搜索树]
+tags: [PAT, 算法, 平衡二叉树, AVL, 二叉搜索树]
 categories: [PAT]
 math: true
 index_img: https://tva4.sinaimg.cn/large/87c01ec7gy1frmn0empcsj21kw0w0e87.jpg
@@ -157,6 +157,161 @@ void insert(TreeNode* &root, int val) {
                 R(root->right);
                 L(root);
             }
+        }
+    }
+}
+
+int main() {
+    int n, val;
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        insert(root, val);
+    }
+    printf("%d\n", root->val);
+    return 0;
+}
+```
+
+## 其他
+
+平衡二叉树建立模板
+
+```C++
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode *left, *right;
+} *root;
+
+void R(TreeNode* &root) {
+    TreeNode* temp = root->left;
+    root->left = temp->right;
+    temp->right = root;
+    root = temp;
+}
+
+void L(TreeNode* &root) {
+    TreeNode* temp = root->right;
+    root->right = temp->left;
+    temp->left = root;
+    root = temp;
+}
+
+int getHeight(TreeNode* root) {
+    if (root == NULL) return 0;
+    return max(getHeight(root->left), getHeight(root->right)) + 1;
+}
+
+void insert(TreeNode* &root, int val) {
+    if (root == NULL) {
+        root = new TreeNode;
+        root->val = val;
+        root->left = root->right = NULL;
+    } else if (root->val > val) { // 左子树
+        insert(root->left, val);
+        int l = getHeight(root->left), r = getHeight(root->right);
+        if (l - r == 2) { // l
+            if (root->left->val < val) { // LR 新的结点被插入左边结点的右子树
+                L(root->left);
+            }
+            R(root);
+        }
+    } else {
+        insert(root->right,val);
+        int l = getHeight(root->left), r = getHeight(root->right);
+        if (l - r == -2) { // R
+            if (root->right->val > val) { // RL 新的结点插入到右子树的左边
+                R(root->right);
+            }
+            L(root);
+        }
+    }
+}
+
+int main() {
+    int n, val;
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        insert(root, val);
+    }
+    printf("%d\n", root->val);
+    return 0;
+}
+```
+
+## 平衡二叉树建立模板
+
+记住下面关键几点
+
+- 一个获取高度的函数
+- 两个旋转函数R,L
+- 四种树形结构
+	- LL: 根结点R
+	- LR: 根结点左子树L,根结点R
+	- RR: 根结点L
+	- RL: 根结点右子树R,根结点L
+- 判断当前结点属于上面哪种树形结构
+	- LL: getH(root->left) - getH(root->right) == 2
+	- LR: getH(root->left) - getH(root->right) == 2 && root->left->val < val
+	- RR: getH(root->left) - getH(root->right) == -2
+	- RL: getH(root->left) - getH(root->right) == -2 && root->right->val > val
+
+```C++
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode *left, *right;
+} *root;
+
+void R(TreeNode* &root) {
+    TreeNode* temp = root->left;
+    root->left = temp->right;
+    temp->right = root;
+    root = temp;
+}
+
+void L(TreeNode* &root) {
+    TreeNode* temp = root->right;
+    root->right = temp->left;
+    temp->left = root;
+    root = temp;
+}
+
+int getHeight(TreeNode* root) {
+    if (root == NULL) return 0;
+    return max(getHeight(root->left), getHeight(root->right)) + 1;
+}
+
+void insert(TreeNode* &root, int val) {
+    if (root == NULL) {
+        root = new TreeNode;
+        root->val = val;
+        root->left = root->right = NULL;
+    } else if (root->val > val) { // 左子树
+        insert(root->left, val);
+        int l = getHeight(root->left), r = getHeight(root->right);
+        if (l - r == 2) { // l
+            if (root->left->val < val) { // LR 新的结点被插入左边结点的右子树
+                L(root->left);
+            }
+            R(root);
+        }
+    } else {
+        insert(root->right,val);
+        int l = getHeight(root->left), r = getHeight(root->right);
+        if (l - r == -2) { // R
+            if (root->right->val > val) { // RL 新的结点插入到右子树的左边
+                R(root->right);
+            }
+            L(root);
         }
     }
 }
