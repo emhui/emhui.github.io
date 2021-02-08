@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>1069 The Black Hole of Numbers (20 分)</title>
+    <link href="/2021/02/08/1069-The-Black-Hole-of-Numbers-20-%E5%88%86/"/>
+    <url>/2021/02/08/1069-The-Black-Hole-of-Numbers-20-%E5%88%86/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1069-The-Black-Hole-of-Numbers-20-分"><a href="#1069-The-Black-Hole-of-Numbers-20-分" class="headerlink" title="1069 The Black Hole of Numbers (20 分)"></a>1069 The Black Hole of Numbers (20 分)</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/CharIc.png" alt="CharIc"></p><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这里使用 <code>string</code>存储数字，进行内部排序,使用<code>stoi</code>分别求出递减和递增的数字,求出它们的结果转成<code>string</code>再进行下一轮的计算，直到结果为<code>6174</code>或<code>0000</code>.</p><p>注意：因为可能输入的数字和<code>a-b</code>的结果都可能存在不满4位数情况。所以需要进行一个补0操作。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">while</span> (s.size() != <span class="hljs-number">4</span>) &#123;<br>s = <span class="hljs-string">&quot;0&quot;</span> + s;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">nonincreasing</span><span class="hljs-params">(<span class="hljs-built_in">string</span> s)</span> </span>&#123;<br>    sort(s.begin(), s.end(), greater&lt;<span class="hljs-keyword">char</span>&gt;());<br>        <span class="hljs-keyword">return</span> s;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">nondecreasing</span><span class="hljs-params">(<span class="hljs-built_in">string</span> s)</span> </span>&#123;<br>    sort(s.begin(), s.end());<br>    <span class="hljs-keyword">return</span> s;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">string</span> s;<br>    <span class="hljs-built_in">cin</span> &gt;&gt; s;<br><br>    <span class="hljs-comment">// 如果输入的不是四位数，则在前面补0</span><br>    <span class="hljs-keyword">while</span> (s.size() != <span class="hljs-number">4</span>) &#123;<br>            s = <span class="hljs-string">&quot;0&quot;</span> + s;<br>    &#125;<br><br>    <span class="hljs-keyword">int</span> result = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (result != <span class="hljs-number">6174</span>) &#123;<br>        <span class="hljs-keyword">int</span> a = stoi(nonincreasing(s));<br>        <span class="hljs-keyword">int</span> b = stoi(nondecreasing(s));<br>        <span class="hljs-keyword">if</span> (a == b) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s - %s = 0000\n&quot;</span>, s.c_str(), s.c_str());<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>        result = a - b;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%04d - %04d = %04d\n&quot;</span>, a, b, result);<br>        s = to_string(result);<br><br>        <span class="hljs-keyword">while</span> (s.size() != <span class="hljs-number">4</span>) &#123; <span class="hljs-comment">//补充0</span><br>            s = <span class="hljs-string">&quot;0&quot;</span> + s;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>PAT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PAT</tag>
+      
+      <tag>字符串</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1077 Kuchiguse (20 分)</title>
     <link href="/2021/02/08/1077-Kuchiguse-20-%E5%88%86/"/>
     <url>/2021/02/08/1077-Kuchiguse-20-%E5%88%86/</url>
