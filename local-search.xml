@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>485. 最大连续1的个数</title>
+    <link href="/2021/02/15/485-%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD1%E7%9A%84%E4%B8%AA%E6%95%B0/"/>
+    <url>/2021/02/15/485-%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD1%E7%9A%84%E4%B8%AA%E6%95%B0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="485-最大连续1的个数"><a href="#485-最大连续1的个数" class="headerlink" title="485. 最大连续1的个数"></a><a href="https://leetcode-cn.com/problems/max-consecutive-ones/">485. 最大连续1的个数</a></h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="https://gitee.com/yoyhm/oss/raw/master/uPic/7yY9PL.png" alt="7yY9PL"></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题考查 <strong>双指针</strong></p><p>设置两个指针<code>i,j</code>。</p><ul><li><code>i</code>表示一段连续1中的第一个1的位置。</li><li><code>j</code>表示一点连续1中的最后一个1的<strong>下一个位置</strong>。</li></ul><p>所以，首先需要找到<code>i</code>的位置，再从<code>i</code>开始，寻找最后一个1的位置，也就是<code>j-1</code>。最后使用<code>ans</code>变量记录最大值。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">while</span> (i &lt; n &amp;&amp; j &lt; n) &#123;<br><span class="hljs-comment">// i走到第一个等于1的地方</span><br><span class="hljs-keyword">while</span> (i &lt; n) &#123;<br><span class="hljs-keyword">if</span> (nums[i] == <span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;<br>i++;<br>&#125;<br>j = i; <span class="hljs-comment">// j从i开始，找到最后一个1的位置</span><br><span class="hljs-comment">// j 走到不为1的地方</span><br><span class="hljs-keyword">while</span> (j &lt; n &amp;&amp; nums[j] == <span class="hljs-number">1</span>) &#123;<br>j++;<br>&#125;<br><span class="hljs-comment">// 更新答案</span><br>ans = max(j - i, ans);<br><span class="hljs-comment">// i再次从j的位置开始，找第一个为1的位置</span><br>i = j;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findMaxConsecutiveOnes</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> ans = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, j = <span class="hljs-number">0</span>, n = nums.size();<br><br>        <span class="hljs-keyword">while</span> (i &lt; n &amp;&amp; j &lt; n) &#123;<br>            <span class="hljs-keyword">while</span> (i &lt; n) &#123;<br>                <span class="hljs-keyword">if</span> (nums[i] == <span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;<br>                i++;<br>            &#125;<br>            j = i;<br>            <span class="hljs-keyword">while</span> (j &lt; n &amp;&amp; nums[j] == <span class="hljs-number">1</span>) &#123;<br>                j++;<br>            &#125;<br>            ans = max(j - i, ans);<br>            i = j;<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>LeetCode</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>leetcode</tag>
+      
+      <tag>数组</tag>
+      
+      <tag>双指针</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>1016 Phone Bills (25 分)</title>
     <link href="/2021/02/11/1016-Phone-Bills-25-%E5%88%86/"/>
     <url>/2021/02/11/1016-Phone-Bills-25-%E5%88%86/</url>
