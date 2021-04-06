@@ -27,7 +27,21 @@ index_img: https://tva3.sinaimg.cn/large/87c01ec7gy1frmry165k5j21hc0u0n6b.jpg
 
 > 判断是不是完全二叉树，就看在出现了一个孩子为空的结点之后是否还会出现孩子结点不为空的结点，如果出现了就不是完全二叉树。
 
+代码如下
 
+```C++
+bool isComplete = true, missing = false;
+
+// 左结点不存在，右结点存在 ｜｜ 存在丢失结点且后面子结点还存在
+if ((!node->left && node->right) || (missing && (node->left || node->right))) {
+    isComplete = false;
+}
+
+// 若一个存在，则存在丢失结点
+if (!root->left || !root->right) {
+    missing = true;
+}
+```
 
 ## 代码
 

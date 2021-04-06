@@ -19,26 +19,27 @@ index_img: https://tva4.sinaimg.cn/large/0060lm7Tly1ftg6xc454vj31hc0u07wh.jpg
 ## 代码
 
 ```C++
-#include <cstdio>
+#include <iostream>
 #include <set>
 using namespace std;
 
 int main() {
-    int n, num;
-    set<int> st; // set是一個集合，內部的元素不會重複，同時它會自動進行排序，也是從小到大
-    scanf("%d", &n);
+    // 找到最小的且没有出现在里面的数字
+    int n, val;
+    set<int> s;
+    cin >> n;
     for (int i = 0; i < n; i++) {
-        scanf("%d", &num);
-        if (num > 0) {st.insert(num);}
+        cin >> val;
+        s.insert(val);
     }
-    int size = st.size();
-    for (int i = 1; i <= size + 1; i++) { // 这里的范围是到size+1
-        if (st.find(i) == st.end()){
-            printf("%d\n", i);
-            break;
-        }
+    int ans = 1;
+    for (auto &num: s) {
+        if (num <= 0) continue;
+        // 如果这个数大于0，且没有出现在输入中
+        if (s.count(ans) == 0) break;
+        else ans = num + 1;
     }
-    return 0;
+    printf("%d\n", ans);
 }
 ```
 

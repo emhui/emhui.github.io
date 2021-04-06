@@ -97,6 +97,44 @@ int main() {
 }
 ```
 
+```C++
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int m, n; // m:tests, n:keys;
+vector<int> cbt;
+
+void posttravel(int root) {
+    if (root > n) return;
+    posttravel(root * 2);
+    posttravel(root * 2 + 1);
+    printf("%d", cbt[root]);
+    if (root != 1) printf(" ");
+}
+
+int main() {
+    cin >> m >> n;
+    bool isMaxHeap, isMinHeap;
+    cbt.resize(n + 1);
+    while (m--) {
+        cbt.clear();
+        isMaxHeap = isMinHeap = true;
+        for (int i = 1; i <= n; i++) cin >> cbt[i];
+        for (int i = n; i >= 2; i--) {
+            if (cbt[i] > cbt[i / 2]) isMaxHeap = false;
+            if (cbt[i] < cbt[i / 2]) isMinHeap = false;
+        }
+        if (isMaxHeap) printf("Max Heap\n");
+        else if (isMinHeap) printf("Min Heap\n");
+        else printf("Not Heap\n");
+        posttravel(1);
+        printf("\n");
+    }
+    return 0;
+}
+```
+
 ## 其他
 
 类似题目

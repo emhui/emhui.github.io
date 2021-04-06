@@ -15,6 +15,10 @@ categories: [PAT]
 
 本题考查**如何表示分数形式**和**求最大公约数**。
 
+分数四则运算可以参考 [分数四则运算](https://emhui.fun/2021/02/17/%E5%88%86%E6%95%B0%E5%9B%9B%E5%88%99%E8%BF%90%E7%AE%97/)
+
+> 下面是以前写的，最新的思路可以参考上面链接，写法更加简单。
+
 如何表示分数
 
 ```C++
@@ -68,6 +72,63 @@ int gcd(int a, int b) {
 
 ## 代码
 
+> 更新日期：2021-02-17 16:07
+
+```C++
+#include <cstdio>
+#include <cmath>
+
+int gcd(int m, int n) {
+    return n == 0 ? m : gcd(n, m % n);
+}
+
+// 化简ab
+void reduction(int &m, int &n) {
+    if (m < 0) {
+        n = -n;
+        m = -m;
+    }
+    if (n == 0) {
+        m = 1;
+    } else {
+        int d = gcd(abs(m), abs(n));
+        m /= d;
+        n /= d;
+    }
+}
+
+// 打印 a, b;
+void showFormat(int m, int n) {
+	if (n == 0) {
+		printf("INF\n");
+		return;
+	}
+    // 对m,n进行化简
+    reduction(m, n);
+    if (n == 1) printf("%d\n", m);
+    else if (abs(m) > abs(n)) printf("%d %d/%d\n", m / n, abs(m) % n, n);
+    else printf("%d/%d\n", m, n);
+}
+
+int main() {
+    int n;
+    int c, d, a = 0, b = 1, g;
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d/%d", &c, &d);
+        // a / b + c / d = ad+bc / bd
+        a = a * d + b * c;
+        b = d * b;
+        g = gcd(abs(a), abs(b));
+        a /= g;
+        b /= g;
+    }
+    showFormat(a, b);
+}
+```
+
+> 更新日期:2021-02-07 10:20
+
 ```C++
 #include <cstdio>
 #include <cmath>
@@ -118,4 +179,5 @@ int main() {
 
 ## 相似题目
 
-- [1088 Rational Arithmetic (20 分)](https://pintia.cn/problem-sets/994805342720868352/problems/994805378443755520)
+- [1088 Rational Arithmetic (20 分)](https://emhui.fun/2021/02/17/1088-Rational-Arithmetic-20-%E5%88%86/)
+
