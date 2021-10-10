@@ -16,7 +16,7 @@ before_script: ## 根据你所用的主题和自定义的不同，这里会有�
   - cd fluid
   - npm install --production # 安装 Suka 主题的依赖
   - cd ../.. # 返回站点根目录
-  - cp _config.theme.yml themes/fluid/_config.yml # 将主题的配置文件放回原处    
+  - cp _config.fluid.yml themes/fluid/_config.yml # 将主题的配置文件放回原处    
   - npm install # 在根目录安装站点需要的依赖 
 script: 
   - hexo generate # generate static files
