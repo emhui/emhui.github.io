@@ -106,11 +106,3 @@ deploy:
   type: git
   repo: https://github.com/emhui/emhui.github.io
   branch: master
-
-# hexo-admin authentification
-admin:
-  username: emhui
-  password_hash: $2a$10$Yin1IAiAEwaSfdGnFU9.2OlQS7OgQeWq9z/1oreCEESALxiq55IT.
-  secret: Mrs.c would achieve her dream.
-  deployCommand: './deploy.sh'
-
