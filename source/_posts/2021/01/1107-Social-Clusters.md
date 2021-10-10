@@ -3,7 +3,7 @@ title: 1107 Social Clusters
 date: 2021-01-20 19:50:26
 tags: [PAT, 算法, union-find]
 categories: [PAT]
-index_img:https://tva1.sinaimg.cn/large/87c01ec7gy1frmrycqdnyj21hc0u0qc3.jpg
+index_img: https://tva1.sinaimg.cn/large/87c01ec7gy1frmrycqdnyj21hc0u0qc3.jpg
 ---
 
 # 1107 Social Clusters
