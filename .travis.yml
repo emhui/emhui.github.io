@@ -10,7 +10,7 @@ cache:
     - node_modules # 缓存 node_modules 加快构建速度
 before_script: ## 根据你所用的主题和自定义的不同，这里会有所不同
   - npm install -g hexo-cli # 在 CI 环境内安装 Hexo
-  - mkdir themes # 由于我们没有将 themes/ 上传，所以我们需要新建一个
+  # - mkdir themes # 由于我们没有将 themes/ 上传，所以我们需要新建一个
   - cd themes 
   - git clone https://github.com/fluid-dev/hexo-theme-fluid fluid
   - cd fluid
