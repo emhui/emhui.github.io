@@ -2,7 +2,7 @@
 title: M1芯片MacBook的VSCODE使用C++调试代码
 date: 2021-10-10 15:40:10
 tags:[教程]
-categories: [软件]
+categories: 软件
 ---
 
 # 在M1芯片上的VSCODE上使用C++进行调试
