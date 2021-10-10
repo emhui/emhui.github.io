@@ -25,7 +25,7 @@ deploy: # 根据个人情况，这里会有所不同
   skip_cleanup: true # 构建完成后不清除
   token: $GH_TOKEN # 你刚刚设置的 token
   keep_history: true # 保存历史
-  fqdn: emhui.fun# 自定义域名，使用 username.github.io 可删除
+  fqdn: emhui.github.io # 自定义域名，使用 username.github.io 可删除
   on:
     branch: blog-source # hexo 站点源文件所在的 branch
   local_dir: public 
