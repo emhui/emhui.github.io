@@ -16,16 +16,16 @@ before_script: ## 根据你所用的主题和自定义的不同，这里会有�
   - cd fluid
   - npm install --production # 安装 Suka 主题的依赖
   - cd ../.. # 返回站点根目录
-  - cp _config.fluid.yml themes/fluid/_config.yml # 将主题的配置文件放回原处    
-  - npm install # 在根目录安装站点需要的依赖 
-script: 
+  - cp _config.fluid.yml themes/fluid/_config.yml # 将主题的配置文件放回原处
+  - npm install # 在根目录安装站点需要的依赖
+script:
   - hexo generate # generate static files
 deploy: # 根据个人情况，这里会有所不同
   provider: pages
   skip_cleanup: true # 构建完成后不清除
   token: $GH_TOKEN # 你刚刚设置的 token
   keep_history: true # 保存历史
-  fqdn: emhui.github.io # 自定义域名，使用 username.github.io 可删除
+  fqdn: emhui.fun # 自定义域名，使用 username.github.io 可删除
   on:
     branch: blog-source # hexo 站点源文件所在的 branch
   local_dir: public 
