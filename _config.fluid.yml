@@ -881,16 +881,14 @@ links:
       link: "https://github.com/fluid-dev/hexo-theme-fluid",
       image: "/img/favicon.png"
     }
-
   # 当成员头像加载失败时，替换为指定图片
   # When the member avatar fails to load, replace the specified image
   onerror_avatar: /img/avatar.png
-
   # 友链下方自定义区域，支持 HTML，可插入例如申请友链的文字
   # Custom content at the bottom of the links
   custom:
     enable: false
-    content: '<hr>无</ul>'
+    content: ''
 
 #---------------------------
 # 以下是配置 JS CSS 等静态资源的 URL 前缀，可以自定义成 CDN 地址，
@@ -958,7 +956,3 @@ static_prefix:
 
 # 压缩生成文件
 all_minifier: true
-
-
-/Links Page
-
